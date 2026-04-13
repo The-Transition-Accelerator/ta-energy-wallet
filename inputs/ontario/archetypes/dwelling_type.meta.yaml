@@ -1,0 +1,25 @@
+title: "Dwelling Type Distribution"
+question: "What types of homes are modeled?"
+topic: demographics
+description: >
+  Defines dwelling type population weights by climate zone. Four categories
+  cover the Ontario housing stock: single-family detached, row/townhouse,
+  apartment, and mobile home.
+source:
+  name: "DSPM Canada Reference Library"
+  detail: "CEUD 2021 building stock data."
+keys: [climate_zone]
+columns:
+  climate_zone:
+    description: "Climate zone identifier"
+    type: categorical
+    values: [CZ_5, CZ_6, CZ_7A]
+  dwelling_type:
+    description: "Dwelling type category"
+    type: categorical
+    values: [sfd, row, apt, mob]
+  population_share:
+    description: "Share of households of this dwelling type within the climate zone"
+    type: numeric
+    unit: "proportion"
+    range: [0, 1]

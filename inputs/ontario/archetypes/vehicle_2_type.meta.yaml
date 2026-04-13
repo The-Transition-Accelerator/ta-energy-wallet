@@ -1,0 +1,22 @@
+title: "Second Vehicle Type Distribution"
+question: "Do households have a second vehicle?"
+topic: vehicles
+description: >
+  Second vehicle slot. Currently set to 'none' for 100% of households. This
+  data product does not evaluate second vehicles.
+source:
+  name: "N/A"
+  detail: "Intentionally set to none for all households."
+notes:
+  - "The energy wallet definition currently only includes the first primary vehicle. Second vehicle modeling may be expanded in the future."
+keys: []
+columns:
+  vehicle_2_type:
+    description: "Second vehicle type"
+    type: categorical
+    values: [none]
+  population_share:
+    description: "Share of households (always 1.0)"
+    type: numeric
+    unit: "proportion"
+    range: [1, 1]

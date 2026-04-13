@@ -1,0 +1,54 @@
+title: "HVAC System Grouping Categories"
+question: "How are HVAC systems classified for output grouping?"
+topic: space_heating_cooling
+description: >
+  Reference mapping table that classifies each hvac_system value into three
+  grouping dimensions for post-pipeline analysis and dashboard display. This
+  table is NOT used by the pipeline — it is joined to results at analysis time.
+source:
+  name: "Analyst-defined"
+  detail: "Classification agreed in conversation, 2026-04-11."
+notes:
+  - "This is a reference table for output grouping, not a pipeline input."
+  - "Join on hvac_system to add grouping columns to Step 4/5 outputs."
+keys: [hvac_system]
+columns:
+  hvac_system:
+    description: "HVAC system configuration name (matches archetypes/hvac_system.csv values)"
+    type: categorical
+    values:
+      - "ashp w electric backup"
+      - "ashp w gas backup"
+      - "ashp w oil backup"
+      - "ashp w propane backup"
+      - "ashp w wood backup"
+      - "ccashp w electric backup"
+      - "ccashp w gas backup"
+      - "ccashp w oil backup"
+      - "ccashp w propane backup"
+      - "ccashp w wood backup"
+      - "condensing gas w AC"
+      - "condensing gas wo AC"
+      - "electric resistance w AC"
+      - "electric resistance wo AC"
+      - "gshp"
+      - "non-condensing gas w AC"
+      - "non-condensing gas wo AC"
+      - "oil w AC"
+      - "oil wo AC"
+      - "propane w AC"
+      - "propane wo AC"
+      - "wood w AC"
+      - "wood wo AC"
+  ac:
+    description: "Whether the system includes air conditioning"
+    type: categorical
+    values: ["yes", "no"]
+  heating_fuel:
+    description: "Primary heating fuel classification"
+    type: categorical
+    values: ["Electricity", "Electricity+Fuel", "Natural Gas", "Oil", "Propane", "Wood"]
+  heating_technology:
+    description: "Heating technology category"
+    type: categorical
+    values: ["ASHP", "Electric Resistance", "GSHP", "Single Fuel Furnace"]

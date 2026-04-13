@@ -1,0 +1,21 @@
+title: "Climate Zone Distribution"
+question: "What climate zones are covered?"
+topic: demographics
+description: >
+  Defines climate zone population weights for Ontario. Weights represent the
+  share of Ontario households in each climate zone, derived from Statistics
+  Canada census tract population data mapped to Canadian climate zones.
+source:
+  name: "DSPM Canada Reference Library"
+  detail: "CEUD 2021 building stock data; census tract population mapping."
+keys: []
+columns:
+  climate_zone:
+    description: "Climate zone identifier per National Energy Code of Canada"
+    type: categorical
+    values: [CZ_5, CZ_6, CZ_7A]
+  population_share:
+    description: "Share of Ontario households in this climate zone"
+    type: numeric
+    unit: "proportion"
+    range: [0, 1]

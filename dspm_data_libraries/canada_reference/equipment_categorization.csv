@@ -1,0 +1,60 @@
+equipment_config_id,equipment_end_use,equipment_name,sector,equipment_type,equipment_class,equipment_eul,cost_equipment,labour_person_days,has_cooling,heating_technology,heating_fuel
+config_hvac_res_001,hvac,oil wo AC,res,hvac,residential hvac,15,10000,1,No,Furnace/Boiler,Oil
+config_hvac_res_002,hvac,non-condensing gas wo AC,res,hvac,residential hvac,15,7000,1,No,Furnace/Boiler,Gas
+config_hvac_res_003,hvac,condensing gas wo AC,res,hvac,residential hvac,15,8000,1,No,Furnace/Boiler,Gas
+config_hvac_res_004,hvac,electric resistance wo AC,res,hvac,residential hvac,15,6000,1,No,Electric Resistance,Electricity
+config_hvac_res_005,hvac,propane wo AC,res,hvac,residential hvac,15,8000,1,No,Furnace/Boiler,Propane
+config_hvac_res_006,hvac,wood wo AC,res,hvac,residential hvac,15,10000,1,No,Furnace/Boiler,Wood
+config_hvac_res_007,hvac,oil w AC,res,hvac,residential hvac,15,16000,1,Yes,Furnace/Boiler,Oil
+config_hvac_res_008,hvac,non-condensing gas w AC,res,hvac,residential hvac,15,13000,1,Yes,Furnace/Boiler,Gas
+config_hvac_res_009,hvac,condensing gas w AC,res,hvac,residential hvac,15,14000,1,Yes,Furnace/Boiler,Gas
+config_hvac_res_010,hvac,electric resistance w AC,res,hvac,residential hvac,15,12000,1,Yes,Electric Resistance,Electricity
+config_hvac_res_011,hvac,propane w AC,res,hvac,residential hvac,15,14000,1,Yes,Furnace/Boiler,Propane
+config_hvac_res_012,hvac,wood w AC,res,hvac,residential hvac,15,16000,1,Yes,Furnace/Boiler,Wood
+config_hvac_res_013,hvac,gshp,res,hvac,residential hvac,15,40000,1,Yes,GSHP,Electricity
+config_hvac_res_014,hvac,ashp w oil backup,res,hvac,residential hvac,15,18000,1,Yes,ASHP (Dual Fuel),Oil
+config_hvac_res_015,hvac,ashp w gas backup,res,hvac,residential hvac,15,16000,1,Yes,ASHP (Dual Fuel),Gas
+config_hvac_res_016,hvac,ashp w electric backup,res,hvac,residential hvac,15,14000,1,Yes,ASHP,Electricity
+config_hvac_res_017,hvac,ashp w propane backup,res,hvac,residential hvac,15,16000,1,Yes,ASHP (Dual Fuel),Propane
+config_hvac_res_018,hvac,ashp w wood backup,res,hvac,residential hvac,15,18000,1,Yes,ASHP (Dual Fuel),Wood
+config_hvac_res_019,hvac,ccashp w oil backup,res,hvac,residential hvac,15,20000,1,Yes,ASHP (Dual Fuel),Oil
+config_hvac_res_020,hvac,ccashp w gas backup,res,hvac,residential hvac,15,18000,1,Yes,ASHP (Dual Fuel),Gas
+config_hvac_res_021,hvac,ccashp w electric backup,res,hvac,residential hvac,15,16000,1,Yes,ASHP,Electricity
+config_hvac_res_022,hvac,ccashp w propane backup,res,hvac,residential hvac,15,18000,1,Yes,ASHP (Dual Fuel),Propane
+config_hvac_res_023,hvac,ccashp w wood backup,res,hvac,residential hvac,15,20000,1,Yes,ASHP (Dual Fuel),Wood
+config_dhw_res_001,dhw,electric resistance,res,dhw,residential dhw,12,4000,1,,,
+config_dhw_res_002,dhw,gas,res,dhw,residential dhw,12,5000,1,,,
+config_dhw_res_003,dhw,oil,res,dhw,residential dhw,12,6000,1,,,
+config_dhw_res_004,dhw,propane,res,dhw,residential dhw,12,6000,1,,,
+config_dhw_res_005,dhw,wood,res,dhw,residential dhw,12,6000,1,,,
+config_dhw_res_009,dhw,HPWH,res,dhw,residential dhw,12,7500,1,,,
+config_appliances_res_001,appliances,res appliances,res,appliances,residential appliances,10,3000,1,,,
+config_lighting_res_001,lighting,res lighting,res,lighting,residential lighting,10,250,1,,,
+config_range_res_001,cooking,elec range,res,range,residential range,10,800,1,,,
+config_range_res_002,cooking,gas range,res,range,residential range,10,800,1,,,
+config_dryer_res_001,dryer,elec dryer,res,dryer,residential dryer,10,800,1,,,
+config_dryer_res_002,dryer,gas dryer,res,dryer,residential dryer,10,800,1,,,
+config_hvac_com_001,hvac,electric resistance heating & electric cooling,com,hvac,commercial hvac,25,1000,1,Yes,Electric Resistance,Electricity
+config_hvac_com_002,hvac,gas heat & electric cooling,com,hvac,commercial hvac,25,1000,1,Yes,Furnace/Boiler,Gas
+config_hvac_com_003,hvac,oil heat & electric cooling,com,hvac,commercial hvac,25,1000,1,Yes,Furnace/Boiler,Oil
+config_hvac_com_004,hvac,steam heat & electric cooling,com,hvac,commercial hvac,25,1000,1,Yes,Furnace/Boiler,Steam
+config_hvac_com_005,hvac,district heating & cooling,com,hvac,commercial hvac,25,1000,1,Yes,District,District
+config_hvac_com_006,hvac,GSHP,com,hvac,commercial hvac,25,1000,1,Yes,GSHP,Electricity
+config_hvac_com_007,hvac,ccASHP w/ electric res backup w/o zonal HR,com,hvac,commercial hvac,25,1000,1,Yes,ASHP,Electricity
+config_hvac_com_008,hvac,ccASHP w/ electric res backup w/ zonal HR (VRF),com,hvac,commercial hvac,25,1000,1,Yes,ASHP,Electricity
+config_hvac_com_009,hvac,ccASHP w/ gas backup w/o zonal HR,com,hvac,commercial hvac,25,1000,1,Yes,ASHP (Dual Fuel),Gas
+config_hvac_com_010,hvac,ccASHP w/ gas backup w/ zonal HR,com,hvac,commercial hvac,25,1000,1,Yes,ASHP (Dual Fuel),Gas
+config_dhw_com_001,dhw,electric resistance,com,dhw,commercial dhw,20,1000,1,,,
+config_dhw_com_002,dhw,gas,com,dhw,commercial dhw,20,1000,1,,,
+config_dhw_com_003,dhw,oil,com,dhw,commercial dhw,20,1000,1,,,
+config_dhw_com_004,dhw,steam,com,dhw,commercial dhw,20,1000,1,,,
+config_dhw_com_005,dhw,other,com,dhw,commercial dhw,20,1000,1,,,
+config_lighting_com_001,lighting,com lighting - 2021 stock avg,com,lighting,commercial lighting,20,1000,1,,,
+config_lighting_com_002,lighting,com lighting - 15% lower than 2021,com,lighting,commercial lighting,20,1000,1,,,
+config_lighting_com_003,lighting,com lighting - 30% lower than 2021,com,lighting,commercial lighting,20,1000,1,,,
+config_motors_com_001,motors,com motors - 2021 stock avg,com,motors,commercial motors,20,1000,1,,,
+config_motors_com_002,motors,com motors - 15% lower than 2021,com,motors,commercial motors,20,1000,1,,,
+config_motors_com_003,motors,com motors - 30% lower than 2021,com,motors,commercial motors,20,1000,1,,,
+config_process_com_001,process,com - electric process loads,com,process,commercial process,20,1000,1,,,
+config_process_com_002,process,com - gas process loads,com,process,commercial process,20,1000,1,,,
+config_process_com_003,process,com - other fuel process loads,com,process,commercial process,20,1000,1,,,

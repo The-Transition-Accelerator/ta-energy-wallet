@@ -1,0 +1,45 @@
+title: "EV Charging Location Splits"
+question: "Where do EV owners charge?"
+topic: vehicles
+description: >
+  Defines the share of EV charging by location (home, public Level 2, DCFC),
+  differentiated by dwelling type, vehicle type/category, and home charging
+  access. Households without home charging rely entirely on public infrastructure.
+source:
+  name: "TA Energy Wallet Analysis — Ontario Utility"
+  detail: "Table 7. Based on PlugShare Research & CAA, The Voice of the Canadian Electric Vehicle Driver (November 2024)."
+notes:
+  - "These figures are based on limited data, as the current evidence on charging behaviour is sparse and varies widely across studies and jurisdictions."
+keys: [dwelling_type, vehicle_type, vehicle_category, has_home_charging]
+columns:
+  dwelling_type:
+    description: "Dwelling type category"
+    type: categorical
+    values: [sfd, row, apt, mob]
+  vehicle_type:
+    description: "Vehicle type"
+    type: categorical
+    values: [none, car, SUV, truck]
+  vehicle_category:
+    description: "Powertrain category"
+    type: categorical
+    values: [EV, ICE, none]
+  has_home_charging:
+    description: "Whether the household has home EV charging access"
+    type: categorical
+    values: ["yes", "no"]
+  ev_pct_charged_home:
+    description: "Share of total charging done at home"
+    type: numeric
+    unit: "decimal"
+    range: [0, 1]
+  ev_pct_charged_level2:
+    description: "Share of total charging done at public Level 2 stations"
+    type: numeric
+    unit: "decimal"
+    range: [0, 1]
+  ev_pct_charged_fast:
+    description: "Share of total charging done at DCFC fast chargers"
+    type: numeric
+    unit: "decimal"
+    range: [0, 1]

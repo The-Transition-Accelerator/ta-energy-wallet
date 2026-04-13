@@ -1,0 +1,40 @@
+title: "HVAC Full Electrification Scenario"
+question: "What if households switch to heat pumps?"
+topic: space_heating_cooling
+description: >
+  Full electrification scenario: all baseline fossil fuel and electric
+  resistance HVAC systems are replaced with cold-climate air-source heat pumps
+  with electric backup (ccashp w electric backup) at 100% adoption. Systems
+  that are already electrified (existing ASHP, CCASHP, GSHP) have no upgrade
+  path and remain at their baseline configuration.
+source:
+  name: "User-defined scenario"
+  detail: "Full electrification scenario definition."
+keys: [hvac_system]
+columns:
+  hvac_system:
+    description: "Baseline HVAC system being replaced"
+    type: categorical
+    values:
+      - "non-condensing gas wo AC"
+      - "non-condensing gas w AC"
+      - "condensing gas wo AC"
+      - "condensing gas w AC"
+      - "oil wo AC"
+      - "oil w AC"
+      - "propane wo AC"
+      - "propane w AC"
+      - "electric resistance wo AC"
+      - "electric resistance w AC"
+      - "wood wo AC"
+      - "wood w AC"
+  alt_hvac_system:
+    description: "Alternative HVAC system (ccASHP with electric backup)"
+    type: categorical
+    values:
+      - "ccashp w electric backup"
+  adoption_share:
+    description: "Share of households adopting the upgrade"
+    type: numeric
+    unit: "proportion"
+    range: [0, 1]

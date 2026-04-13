@@ -1,0 +1,34 @@
+title: "Vehicle Energy Rates"
+question: "What do gasoline and EV charging cost?"
+topic: energy_prices
+description: >
+  Gasoline and public EV charging costs in $/GJ. Gasoline rates are from CER
+  Canada's Energy Future 2026 (average rates, 2025 C$). Home EV charging uses
+  the residential electricity rate from costs_home_energy.csv. Public charging
+  premiums of $0.12/kWh (33.33 $/GJ for Level 2) and $0.46/kWh (127.78 $/GJ
+  for DCFC) are added to the residential electricity rate.
+source:
+  name: "Canada Energy Regulator — Canada's Energy Future 2026"
+  detail: "End-Use Prices, Current Measures scenario, Transportation sector, Ontario. EV charging premiums from PlugShare Research & CAA, The Voice of the Canadian Electric Vehicle Driver (November 2024)."
+notes:
+  - "All rates are in $/GJ. The model multiplies GJ energy by these rates directly."
+  - "Gasoline is an average rate in 2025 constant Canadian dollars."
+  - "EV charging rates = residential electricity rate (from costs_home_energy.csv) + public charging premium."
+keys: [year]
+columns:
+  year:
+    description: "Projection year"
+    type: categorical
+    values: [2025, 2030, 2035]
+  cost_gasoline:
+    description: "Average gasoline price"
+    type: numeric
+    unit: "$/GJ"
+  cost_electricity_level2:
+    description: "Public Level 2 EV charging rate (residential electricity + $0.12/kWh premium)"
+    type: numeric
+    unit: "$/GJ"
+  cost_electricity_fast:
+    description: "DCFC fast charging rate (residential electricity + $0.46/kWh premium)"
+    type: numeric
+    unit: "$/GJ"

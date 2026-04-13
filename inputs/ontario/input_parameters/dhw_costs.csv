@@ -1,0 +1,7 @@
+dhw_system,dhw_equipment_cost,dhw_assumed_life,dhw_maintenance_cost_annual
+HPWH,4500,15,125
+electric resistance,1250,15,150
+gas,1500,15,200
+oil,1500,15,200
+propane,1250,15,200
+wood,1250,15,200

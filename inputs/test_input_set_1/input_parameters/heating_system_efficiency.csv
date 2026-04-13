@@ -1,0 +1,4 @@
+heating_system,heating_system_proportion_gas,heating_system_proportion_electric,heating_system_proportion_oil,heating_system_proportion_propane,heating_system_proportion_wood,heating_system_efficiency_gas,heating_system_efficiency_electric,heating_system_efficiency_oil,heating_system_efficiency_propane,heating_system_efficiency_wood,cooling_system_efficiency
+furnace,1.0,0,0,0,0,0.92,0,0,0,0,3.5
+heat_pump,0,1.0,0,0,0,0,3.0,0,0,0,3.5
+boiler,0.8,0.2,0,0,0,0.85,1.0,0,0,0,3.0

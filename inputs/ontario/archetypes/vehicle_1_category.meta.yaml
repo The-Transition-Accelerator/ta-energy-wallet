@@ -1,0 +1,29 @@
+title: "Primary Vehicle Powertrain Split"
+question: "What share of vehicles are electric vs. ICE?"
+topic: vehicles
+description: >
+  Defines the baseline powertrain split between internal combustion engine (ICE)
+  and battery electric vehicle (EV) for each primary vehicle type, based on
+  2024 Ontario vehicle registration data.
+source:
+  name: "Statistics Canada"
+  detail: "Table 23-10-0308-01 — Vehicle registrations, by type of vehicle and fuel type. Ontario, 2024. Light-duty vehicles (≤4,536 kg)."
+notes:
+  - "ICE includes gasoline, diesel, non-plug-in hybrid, and other fuel types. Non-plug-in hybrids are explicitly incorporated into ICE vehicle efficiency improvement assumptions."
+  - "EV includes battery electric vehicles (BEV) and plug-in hybrid electric vehicles (PHEV)."
+  - "Limitation: PHEVs are grouped with BEVs under 'EV'. Future updates may consider adding more granularity to the vehicle categories, such as a separate PHEV category."
+keys: [vehicle_1_type]
+columns:
+  vehicle_1_type:
+    description: "Primary vehicle type"
+    type: categorical
+    values: [car, SUV, truck, none]
+  vehicle_1_category:
+    description: "Powertrain category"
+    type: categorical
+    values: [ICE, EV, none]
+  population_share:
+    description: "Share of vehicles with this powertrain within the vehicle type"
+    type: numeric
+    unit: "proportion"
+    range: [0, 1]

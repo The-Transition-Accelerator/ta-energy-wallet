@@ -1,0 +1,26 @@
+title: "Second Vehicle Powertrain Split"
+question: "What powertrain does the second vehicle have?"
+topic: vehicles
+description: >
+  Powertrain category for the second vehicle slot. Set to 'none' for 100% of
+  households, consistent with vehicle_2_type.
+source:
+  name: "N/A"
+  detail: "Intentionally set to none for all households."
+notes:
+  - "The energy wallet definition currently only includes the first primary vehicle. Second vehicle modeling may be expanded in the future."
+keys: [vehicle_2_type]
+columns:
+  vehicle_2_type:
+    description: "Second vehicle type"
+    type: categorical
+    values: [none]
+  vehicle_2_category:
+    description: "Powertrain category for second vehicle"
+    type: categorical
+    values: [none]
+  population_share:
+    description: "Share of households (always 1.0)"
+    type: numeric
+    unit: "proportion"
+    range: [1, 1]

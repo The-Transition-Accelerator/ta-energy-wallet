@@ -1,0 +1,5 @@
+year,cost_electricity_home,cost_natural_gas_home,cost_oil_home,cost_propane_home,cost_wood_home,cost_gasoline,cost_electricity_level2,cost_electricity_fast,discount_rate,electricity_fixed_charge_monthly,natural_gas_fixed_charge_monthly,vkt_1_annual_base,vkt_1_annual_alt,vkt_2_annual_base,vkt_2_annual_alt,panel_assumed_life_base,panel_assumed_life_alt
+2025,50.0,20.0,45.0,40.0,15.0,35.0,55.0,60.0,0.03,15,12,15000,14500,10000,9500,30,30
+2030,55.0,22.0,48.0,42.0,16.0,38.0,58.0,63.0,0.03,16,13,15000,14000,10000,9000,30,30
+2040,62.0,25.0,52.0,45.0,17.0,42.0,62.0,68.0,0.03,18,14,15000,13000,10000,8000,30,30
+2050,62.0,25.0,52.0,45.0,17.0,42.0,62.0,68.0,0.03,18,14,15000,13000,10000,8000,30,30

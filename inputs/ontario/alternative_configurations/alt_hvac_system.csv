@@ -1,0 +1,13 @@
+hvac_system,alt_hvac_system,adoption_share
+non-condensing gas wo AC,ccashp w electric backup,1.0
+non-condensing gas w AC,ccashp w electric backup,1.0
+condensing gas wo AC,ccashp w electric backup,1.0
+condensing gas w AC,ccashp w electric backup,1.0
+oil wo AC,ccashp w electric backup,1.0
+oil w AC,ccashp w electric backup,1.0
+propane wo AC,ccashp w electric backup,1.0
+propane w AC,ccashp w electric backup,1.0
+electric resistance wo AC,ccashp w electric backup,1.0
+electric resistance w AC,ccashp w electric backup,1.0
+wood wo AC,ccashp w electric backup,1.0
+wood w AC,ccashp w electric backup,1.0

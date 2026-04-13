@@ -1,0 +1,7 @@
+dhw_system,dhw_system_proportion_gas,dhw_system_proportion_electric,dhw_system_proportion_oil,dhw_system_proportion_propane,dhw_system_proportion_wood,dhw_system_efficiency_gas,dhw_system_efficiency_electric,dhw_system_efficiency_oil,dhw_system_efficiency_propane,dhw_system_efficiency_wood
+electric resistance,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0
+gas,1.0,0.0,0.0,0.0,0.0,0.67,0.0,0.0,0.0,0.0
+oil,0.0,0.0,1.0,0.0,0.0,0.0,0.0,0.67,0.0,0.0
+propane,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,0.67,0.0
+wood,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,0.5
+HPWH,0.0,1.0,0.0,0.0,0.0,0.0,3.5,0.0,0.0,0.0

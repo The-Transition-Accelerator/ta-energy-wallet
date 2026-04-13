@@ -1,0 +1,57 @@
+title: "Vehicle Energy Efficiency"
+question: "How fuel-efficient are vehicles?"
+topic: vehicles
+description: >
+  Vehicle energy efficiency by type, powertrain, climate zone, and year. ICE
+  efficiency is expressed as gasoline consumption (GJ/km); BEV efficiency is
+  expressed as electricity consumption (kWh/km). BEV efficiency includes
+  climate-zone-specific derating factors for cold-weather battery performance.
+  Future efficiency improvements (2030, 2035) are based on EPRI's "Improved"
+  scenario, which incorporates technological advancements such as improved
+  aerodynamics, powertrain enhancements, and increased battery energy density
+  for BEVs. The substantial ICE efficiency gains (approaching 50% by 2035) are
+  primarily attributed to the widespread adoption of hybrid powertrains, assumed
+  to become the industry standard.
+source:
+  name: "TA Energy Wallet Analysis — Ontario Utility"
+  detail: >
+    Base-year (2025) efficiencies from NRCan Fuel Consumption Guide. Future-year
+    improvements from Electric Power Research Institute (EPRI) "Improved" scenario.
+    EV cold-weather derating factors by climate zone from TA Ontario utility analysis.
+notes:
+  - "ICE efficiency does not vary by climate zone."
+  - "EV derating factors: CZ_5=0.94, CZ_6=0.90, CZ_7A=0.86. Stored as a separate column and applied in the calculation code."
+  - "The 'none' vehicle type uses zero efficiency values."
+keys: [year, vehicle_type, vehicle_category, climate_zone]
+columns:
+  year:
+    description: "Projection year"
+    type: categorical
+    values: [2025, 2030, 2035]
+  vehicle_type:
+    description: "Vehicle type"
+    type: categorical
+    values: [none, car, SUV, truck]
+  vehicle_category:
+    description: "Powertrain category"
+    type: categorical
+    values: [ICE, EV, none]
+  climate_zone:
+    description: "Climate zone identifier"
+    type: categorical
+    values: [CZ_5, CZ_6, CZ_7A]
+  vehicle_efficiency_gas:
+    description: "Gasoline consumption rate"
+    type: numeric
+    unit: "GJ/km"
+    range: [0, 0.005]
+  vehicle_efficiency_electric:
+    description: "Electricity consumption rate"
+    type: numeric
+    unit: "kWh/km"
+    range: [0, 0.3]
+  ev_efficiency_factor:
+    description: "Climate-zone-specific EV efficiency derating factor"
+    type: numeric
+    unit: "dimensionless"
+    range: [0.86, 1.0]

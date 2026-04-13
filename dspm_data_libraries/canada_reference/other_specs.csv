@@ -1,0 +1,16 @@
+equipment_config_id,equipment_config_name,equipment_group,equipment_end_use,equipment_energy_source,cop
+config_appliances_res_001,res appliances,residential appliances,appliances,electricity,1
+config_lighting_res_001,res lighting,residential lighting,lighting,electricity,1
+config_range_res_001,elec range,residential range,cooking,electricity,0.7
+config_range_res_002,gas range,residential range,cooking,gas,0.3
+config_dryer_res_001,elec dryer,residential dryer,dryer,electricity,0.7
+config_dryer_res_002,gas dryer,residential dryer,dryer,gas,0.3
+config_lighting_com_001,com lighting - 2021 stock avg,commercial lighting,lighting,electricity,1
+config_lighting_com_002,com lighting - 15% lower than 2021,commercial lighting,lighting,electricity,1.17647058823529
+config_lighting_com_003,com lighting - 30% lower than 2021,commercial lighting,lighting,electricity,1.42857142857143
+config_motors_com_001,com motors - 2021 stock avg,commercial motors,motors,electricity,1
+config_motors_com_002,com motors - 15% lower than 2021,commercial motors,motors,electricity,1.17647058823529
+config_motors_com_003,com motors - 30% lower than 2021,commercial motors,motors,electricity,1.42857142857143
+config_process_com_001,com - electric process loads,commercial plug and process loads,process,electricity,1
+config_process_com_002,com - gas process loads,commercial plug and process loads,process,gas,0.75
+config_process_com_003,com - other fuel process loads,commercial plug and process loads,process,other,0.75

@@ -1,0 +1,57 @@
+weather_station,design_temp_heat,design_temp_cool
+AB CZ6 - Calgary,-32,28
+AB CZ7a - Edmonton,-33,28
+AB CZ6 - Lethbridge,-32,31
+AB CZ6 - Medicine Hat,-34,32
+AB CZ7A - Red Deer,-35,28
+AB CZ7b - Fort McMurray,-40,28
+BC CZ4 - Abbotsford - Mission,-10,29
+BC CZ5 - Courtenay,-9,28
+BC CZ5 - Kamloops,-25,34
+BC CZ5 - Kelowna,-20,30
+BC CZ4 - Nanaimo,-8,27
+BC CZ6 - Prince George,-36,28
+BC CZ4 - Vancouver,-9,28
+BC CZ4 - Victoria,-6,24
+MB CZ7a - Winnipeg,-35,30
+NB CZ6 - Fredericton,-27,29
+NB CZ6 - Moncton,-25,28
+NB CZ6 - Saint John,-24,25
+NL CZ6 - St. John's,-16,24
+NS CZ6 - Cape Breton,-19,27
+NS CZ6 - Halifax,-18,26
+ON CZ6 - Barrie,-26,29
+ON CZ5 - Kingston,-24,28
+ON CZ5 - Brantford,-20,30
+ON CZ5 - Windsor,-18,32
+ON CZ7A - Greater Sudbury,-30,29
+ON CZ6 - Guelph,-21,29
+ON CZ5 - Hamilton,-19,31
+ON CZ6 - Peterborough,-25,30
+ON CZ6 - Kitchener - Cambridge - Waterloo,-21,29
+ON CZ5 - London,-20,30
+ON CZ7A - North Bay,-30,28
+ON CZ5 - Oshawa,-21,30
+ON CZ6 - Ottawa,-27,30
+ON CZ5 - Sarnia,-18,31
+ON CZ6 - Sault Ste. Marie,-28,29
+ON CZ5 - St. Catharines - Niagara,-18,30
+ON CZ7a - Thunder Bay,-33,29
+ON CZ5 - Toronto,-20,31
+PE CZ6 - Charlottetown,-22,26
+QC CZ6 - Montreal,-26,30
+QC CZ6 - Sherbrooke,-30,29
+QC CZ7a - Quebec City,-28,28
+QC CZ7A - Saguenay,-32,28
+QC CZ6 - Trois-Rivières,-28,29
+SK CZ7a - Regina,-36,30
+SK CZ7a - Saskatoon,-37,30
+BC CZ6 - Whistler,-20,30
+BC CZ7a - Dawson Creek,-40,27
+MB CZ8 - Churchill,-40,25
+NB CZ7a - Edmundston,-29,28
+NL CZ7a - Goose Bay,-32,27
+QC CZ7b - Normandin,-33,28
+SK CZ7b - Prince Albert,-40,28
+YT CZ7b - Whitehorse,-43,25
+NU CZ8 - Iqaluit,-41,17

@@ -1,0 +1,7 @@
+{
+    "display_name": "Canada Reference",
+    "description": "National reference data covering all provinces and territories, calibrated to NRCan CEUD 2021.",
+    "base_year": 2021,
+    "max_year": 2050,
+    "peaks_file": "peaks_by_prov_2021.csv"
+}

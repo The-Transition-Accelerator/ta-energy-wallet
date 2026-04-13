@@ -1,0 +1,7 @@
+dhw_system,alt_dhw_system,adoption_share
+gas,electric resistance,0.8
+gas,HPWH,0.2
+electric resistance,electric resistance,0.8
+electric resistance,HPWH,0.2
+oil,electric resistance,0.8
+oil,HPWH,0.2

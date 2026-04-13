@@ -1,0 +1,11 @@
+building_envelope_bin,display_name
+-5,Bin 1 - Very Poor
+-4,Bin 2 - Poor
+-3,Bin 3 - Average
+-2,Bin 4 - Good
+-1,Bin 5 - Very Good
+1,Bin 6 - NBC 2020 - Tier 1 (or equiv.)
+2,Bin 7 - NBC 2020 - Tier 2 (or equiv.)
+3,Bin 8 - NBC 2020 - Tier 3 (or equiv.)
+4,Bin 9 - NBC 2020 - Tier 4 (or equiv.)
+5,Bin 10 - NBC 2020 - Tier 5 (or equiv.)

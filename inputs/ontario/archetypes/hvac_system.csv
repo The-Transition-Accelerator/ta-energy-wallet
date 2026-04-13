@@ -1,0 +1,277 @@
+climate_zone,dwelling_type,hvac_system,population_share
+CZ_5,apt,ashp w electric backup,0.002549974500254998
+CZ_5,apt,ashp w gas backup,0.010809891901080991
+CZ_5,apt,ashp w oil backup,0.00035999640003599973
+CZ_5,apt,ashp w propane backup,0.0004499955000449996
+CZ_5,apt,ashp w wood backup,0.0008399916000839993
+CZ_5,apt,ccashp w electric backup,0.0
+CZ_5,apt,ccashp w gas backup,0.0
+CZ_5,apt,ccashp w oil backup,0.0
+CZ_5,apt,ccashp w propane backup,0.0
+CZ_5,apt,ccashp w wood backup,0.0
+CZ_5,apt,condensing gas w AC,0.2302876971230288
+CZ_5,apt,condensing gas wo AC,0.36270637293627067
+CZ_5,apt,electric resistance w AC,0.07882921170788293
+CZ_5,apt,electric resistance wo AC,0.1241687583124169
+CZ_5,apt,gshp,0.0
+CZ_5,apt,non-condensing gas w AC,0.048149518504814956
+CZ_5,apt,non-condensing gas wo AC,0.07584924150758493
+CZ_5,apt,oil w AC,0.008539914600853994
+CZ_5,apt,oil wo AC,0.013459865401345989
+CZ_5,apt,propane w AC,0.014369856301436989
+CZ_5,apt,propane wo AC,0.022629773702262983
+CZ_5,apt,wood w AC,0.002329976700232998
+CZ_5,apt,wood wo AC,0.003669963300366997
+CZ_5,mob,ashp w electric backup,0.00492
+CZ_5,mob,ashp w gas backup,0.02089
+CZ_5,mob,ashp w oil backup,0.00069
+CZ_5,mob,ashp w propane backup,0.00087
+CZ_5,mob,ashp w wood backup,0.00163
+CZ_5,mob,ccashp w electric backup,0.0
+CZ_5,mob,ccashp w gas backup,0.0
+CZ_5,mob,ccashp w oil backup,0.0
+CZ_5,mob,ccashp w propane backup,0.0
+CZ_5,mob,ccashp w wood backup,0.0
+CZ_5,mob,condensing gas w AC,0.0
+CZ_5,mob,condensing gas wo AC,0.0
+CZ_5,mob,electric resistance w AC,0.09484
+CZ_5,mob,electric resistance wo AC,0.04916
+CZ_5,mob,gshp,0.0
+CZ_5,mob,non-condensing gas w AC,0.44984
+CZ_5,mob,non-condensing gas wo AC,0.23316
+CZ_5,mob,oil w AC,0.02437
+CZ_5,mob,oil wo AC,0.01263
+CZ_5,mob,propane w AC,0.02042
+CZ_5,mob,propane wo AC,0.01058
+CZ_5,mob,wood w AC,0.05006
+CZ_5,mob,wood wo AC,0.02594
+CZ_5,row,ashp w electric backup,0.00747
+CZ_5,row,ashp w gas backup,0.0317
+CZ_5,row,ashp w oil backup,0.00104
+CZ_5,row,ashp w propane backup,0.00132
+CZ_5,row,ashp w wood backup,0.00247
+CZ_5,row,ccashp w electric backup,0.0
+CZ_5,row,ccashp w gas backup,0.0
+CZ_5,row,ccashp w oil backup,0.0
+CZ_5,row,ccashp w propane backup,0.0
+CZ_5,row,ccashp w wood backup,0.0
+CZ_5,row,condensing gas w AC,0.42542
+CZ_5,row,condensing gas wo AC,0.14758
+CZ_5,row,electric resistance w AC,0.1381
+CZ_5,row,electric resistance wo AC,0.0479
+CZ_5,row,gshp,0.0
+CZ_5,row,non-condensing gas w AC,0.09689
+CZ_5,row,non-condensing gas wo AC,0.03361
+CZ_5,row,oil w AC,0.01782
+CZ_5,row,oil wo AC,0.00618
+CZ_5,row,propane w AC,0.02673
+CZ_5,row,propane wo AC,0.00927
+CZ_5,row,wood w AC,0.00483
+CZ_5,row,wood wo AC,0.00167
+CZ_5,sfd,ashp w electric backup,0.01799
+CZ_5,sfd,ashp w gas backup,0.07637
+CZ_5,sfd,ashp w oil backup,0.00251
+CZ_5,sfd,ashp w propane backup,0.00317
+CZ_5,sfd,ashp w wood backup,0.00596
+CZ_5,sfd,ccashp w electric backup,0.0
+CZ_5,sfd,ccashp w gas backup,0.0
+CZ_5,sfd,ccashp w oil backup,0.0
+CZ_5,sfd,ccashp w propane backup,0.0
+CZ_5,sfd,ccashp w wood backup,0.0
+CZ_5,sfd,condensing gas w AC,0.45981
+CZ_5,sfd,condensing gas wo AC,0.05819
+CZ_5,sfd,electric resistance w AC,0.11185
+CZ_5,sfd,electric resistance wo AC,0.01415
+CZ_5,sfd,gshp,0.0
+CZ_5,sfd,non-condensing gas w AC,0.14025
+CZ_5,sfd,non-condensing gas wo AC,0.01775
+CZ_5,sfd,oil w AC,0.02042
+CZ_5,sfd,oil wo AC,0.00258
+CZ_5,sfd,propane w AC,0.02929
+CZ_5,sfd,propane wo AC,0.00371
+CZ_5,sfd,wood w AC,0.03196
+CZ_5,sfd,wood wo AC,0.00404
+CZ_6,apt,ashp w electric backup,0.002549974500254998
+CZ_6,apt,ashp w gas backup,0.010809891901080991
+CZ_6,apt,ashp w oil backup,0.00035999640003599973
+CZ_6,apt,ashp w propane backup,0.0004499955000449996
+CZ_6,apt,ashp w wood backup,0.0008399916000839993
+CZ_6,apt,ccashp w electric backup,0.0
+CZ_6,apt,ccashp w gas backup,0.0
+CZ_6,apt,ccashp w oil backup,0.0
+CZ_6,apt,ccashp w propane backup,0.0
+CZ_6,apt,ccashp w wood backup,0.0
+CZ_6,apt,condensing gas w AC,0.2302876971230288
+CZ_6,apt,condensing gas wo AC,0.36270637293627067
+CZ_6,apt,electric resistance w AC,0.07882921170788293
+CZ_6,apt,electric resistance wo AC,0.1241687583124169
+CZ_6,apt,gshp,0.0
+CZ_6,apt,non-condensing gas w AC,0.048149518504814956
+CZ_6,apt,non-condensing gas wo AC,0.07584924150758493
+CZ_6,apt,oil w AC,0.008539914600853994
+CZ_6,apt,oil wo AC,0.013459865401345989
+CZ_6,apt,propane w AC,0.014369856301436989
+CZ_6,apt,propane wo AC,0.022629773702262983
+CZ_6,apt,wood w AC,0.002329976700232998
+CZ_6,apt,wood wo AC,0.003669963300366997
+CZ_6,mob,ashp w electric backup,0.00492
+CZ_6,mob,ashp w gas backup,0.02089
+CZ_6,mob,ashp w oil backup,0.00069
+CZ_6,mob,ashp w propane backup,0.00087
+CZ_6,mob,ashp w wood backup,0.00163
+CZ_6,mob,ccashp w electric backup,0.0
+CZ_6,mob,ccashp w gas backup,0.0
+CZ_6,mob,ccashp w oil backup,0.0
+CZ_6,mob,ccashp w propane backup,0.0
+CZ_6,mob,ccashp w wood backup,0.0
+CZ_6,mob,condensing gas w AC,0.0
+CZ_6,mob,condensing gas wo AC,0.0
+CZ_6,mob,electric resistance w AC,0.09484
+CZ_6,mob,electric resistance wo AC,0.04916
+CZ_6,mob,gshp,0.0
+CZ_6,mob,non-condensing gas w AC,0.44984
+CZ_6,mob,non-condensing gas wo AC,0.23316
+CZ_6,mob,oil w AC,0.02437
+CZ_6,mob,oil wo AC,0.01263
+CZ_6,mob,propane w AC,0.02042
+CZ_6,mob,propane wo AC,0.01058
+CZ_6,mob,wood w AC,0.05006
+CZ_6,mob,wood wo AC,0.02594
+CZ_6,row,ashp w electric backup,0.00747
+CZ_6,row,ashp w gas backup,0.0317
+CZ_6,row,ashp w oil backup,0.00104
+CZ_6,row,ashp w propane backup,0.00132
+CZ_6,row,ashp w wood backup,0.00247
+CZ_6,row,ccashp w electric backup,0.0
+CZ_6,row,ccashp w gas backup,0.0
+CZ_6,row,ccashp w oil backup,0.0
+CZ_6,row,ccashp w propane backup,0.0
+CZ_6,row,ccashp w wood backup,0.0
+CZ_6,row,condensing gas w AC,0.42542
+CZ_6,row,condensing gas wo AC,0.14758
+CZ_6,row,electric resistance w AC,0.1381
+CZ_6,row,electric resistance wo AC,0.0479
+CZ_6,row,gshp,0.0
+CZ_6,row,non-condensing gas w AC,0.09689
+CZ_6,row,non-condensing gas wo AC,0.03361
+CZ_6,row,oil w AC,0.01782
+CZ_6,row,oil wo AC,0.00618
+CZ_6,row,propane w AC,0.02673
+CZ_6,row,propane wo AC,0.00927
+CZ_6,row,wood w AC,0.00483
+CZ_6,row,wood wo AC,0.00167
+CZ_6,sfd,ashp w electric backup,0.01799
+CZ_6,sfd,ashp w gas backup,0.07637
+CZ_6,sfd,ashp w oil backup,0.00251
+CZ_6,sfd,ashp w propane backup,0.00317
+CZ_6,sfd,ashp w wood backup,0.00596
+CZ_6,sfd,ccashp w electric backup,0.0
+CZ_6,sfd,ccashp w gas backup,0.0
+CZ_6,sfd,ccashp w oil backup,0.0
+CZ_6,sfd,ccashp w propane backup,0.0
+CZ_6,sfd,ccashp w wood backup,0.0
+CZ_6,sfd,condensing gas w AC,0.45981
+CZ_6,sfd,condensing gas wo AC,0.05819
+CZ_6,sfd,electric resistance w AC,0.11185
+CZ_6,sfd,electric resistance wo AC,0.01415
+CZ_6,sfd,gshp,0.0
+CZ_6,sfd,non-condensing gas w AC,0.14025
+CZ_6,sfd,non-condensing gas wo AC,0.01775
+CZ_6,sfd,oil w AC,0.02042
+CZ_6,sfd,oil wo AC,0.00258
+CZ_6,sfd,propane w AC,0.02929
+CZ_6,sfd,propane wo AC,0.00371
+CZ_6,sfd,wood w AC,0.03196
+CZ_6,sfd,wood wo AC,0.00404
+CZ_7A,apt,ashp w electric backup,0.002549974500254998
+CZ_7A,apt,ashp w gas backup,0.010809891901080991
+CZ_7A,apt,ashp w oil backup,0.00035999640003599973
+CZ_7A,apt,ashp w propane backup,0.0004499955000449996
+CZ_7A,apt,ashp w wood backup,0.0008399916000839993
+CZ_7A,apt,ccashp w electric backup,0.0
+CZ_7A,apt,ccashp w gas backup,0.0
+CZ_7A,apt,ccashp w oil backup,0.0
+CZ_7A,apt,ccashp w propane backup,0.0
+CZ_7A,apt,ccashp w wood backup,0.0
+CZ_7A,apt,condensing gas w AC,0.2302876971230288
+CZ_7A,apt,condensing gas wo AC,0.36270637293627067
+CZ_7A,apt,electric resistance w AC,0.07882921170788293
+CZ_7A,apt,electric resistance wo AC,0.1241687583124169
+CZ_7A,apt,gshp,0.0
+CZ_7A,apt,non-condensing gas w AC,0.048149518504814956
+CZ_7A,apt,non-condensing gas wo AC,0.07584924150758493
+CZ_7A,apt,oil w AC,0.008539914600853994
+CZ_7A,apt,oil wo AC,0.013459865401345989
+CZ_7A,apt,propane w AC,0.014369856301436989
+CZ_7A,apt,propane wo AC,0.022629773702262983
+CZ_7A,apt,wood w AC,0.002329976700232998
+CZ_7A,apt,wood wo AC,0.003669963300366997
+CZ_7A,mob,ashp w electric backup,0.00492
+CZ_7A,mob,ashp w gas backup,0.02089
+CZ_7A,mob,ashp w oil backup,0.00069
+CZ_7A,mob,ashp w propane backup,0.00087
+CZ_7A,mob,ashp w wood backup,0.00163
+CZ_7A,mob,ccashp w electric backup,0.0
+CZ_7A,mob,ccashp w gas backup,0.0
+CZ_7A,mob,ccashp w oil backup,0.0
+CZ_7A,mob,ccashp w propane backup,0.0
+CZ_7A,mob,ccashp w wood backup,0.0
+CZ_7A,mob,condensing gas w AC,0.0
+CZ_7A,mob,condensing gas wo AC,0.0
+CZ_7A,mob,electric resistance w AC,0.09484
+CZ_7A,mob,electric resistance wo AC,0.04916
+CZ_7A,mob,gshp,0.0
+CZ_7A,mob,non-condensing gas w AC,0.44984
+CZ_7A,mob,non-condensing gas wo AC,0.23316
+CZ_7A,mob,oil w AC,0.02437
+CZ_7A,mob,oil wo AC,0.01263
+CZ_7A,mob,propane w AC,0.02042
+CZ_7A,mob,propane wo AC,0.01058
+CZ_7A,mob,wood w AC,0.05006
+CZ_7A,mob,wood wo AC,0.02594
+CZ_7A,row,ashp w electric backup,0.00747
+CZ_7A,row,ashp w gas backup,0.0317
+CZ_7A,row,ashp w oil backup,0.00104
+CZ_7A,row,ashp w propane backup,0.00132
+CZ_7A,row,ashp w wood backup,0.00247
+CZ_7A,row,ccashp w electric backup,0.0
+CZ_7A,row,ccashp w gas backup,0.0
+CZ_7A,row,ccashp w oil backup,0.0
+CZ_7A,row,ccashp w propane backup,0.0
+CZ_7A,row,ccashp w wood backup,0.0
+CZ_7A,row,condensing gas w AC,0.42542
+CZ_7A,row,condensing gas wo AC,0.14758
+CZ_7A,row,electric resistance w AC,0.1381
+CZ_7A,row,electric resistance wo AC,0.0479
+CZ_7A,row,gshp,0.0
+CZ_7A,row,non-condensing gas w AC,0.09689
+CZ_7A,row,non-condensing gas wo AC,0.03361
+CZ_7A,row,oil w AC,0.01782
+CZ_7A,row,oil wo AC,0.00618
+CZ_7A,row,propane w AC,0.02673
+CZ_7A,row,propane wo AC,0.00927
+CZ_7A,row,wood w AC,0.00483
+CZ_7A,row,wood wo AC,0.00167
+CZ_7A,sfd,ashp w electric backup,0.01799
+CZ_7A,sfd,ashp w gas backup,0.07637
+CZ_7A,sfd,ashp w oil backup,0.00251
+CZ_7A,sfd,ashp w propane backup,0.00317
+CZ_7A,sfd,ashp w wood backup,0.00596
+CZ_7A,sfd,ccashp w electric backup,0.0
+CZ_7A,sfd,ccashp w gas backup,0.0
+CZ_7A,sfd,ccashp w oil backup,0.0
+CZ_7A,sfd,ccashp w propane backup,0.0
+CZ_7A,sfd,ccashp w wood backup,0.0
+CZ_7A,sfd,condensing gas w AC,0.45981
+CZ_7A,sfd,condensing gas wo AC,0.05819
+CZ_7A,sfd,electric resistance w AC,0.11185
+CZ_7A,sfd,electric resistance wo AC,0.01415
+CZ_7A,sfd,gshp,0.0
+CZ_7A,sfd,non-condensing gas w AC,0.14025
+CZ_7A,sfd,non-condensing gas wo AC,0.01775
+CZ_7A,sfd,oil w AC,0.02042
+CZ_7A,sfd,oil wo AC,0.00258
+CZ_7A,sfd,propane w AC,0.02929
+CZ_7A,sfd,propane wo AC,0.00371
+CZ_7A,sfd,wood w AC,0.03196
+CZ_7A,sfd,wood wo AC,0.00404

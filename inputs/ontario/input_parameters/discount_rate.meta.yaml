@@ -1,0 +1,16 @@
+title: "Discount Rate"
+question: "What discount rate is used for capital cost annualization?"
+topic: energy_prices
+description: >
+  Discount rate used for annualizing capital costs via the PMT formula. Applied
+  to all equipment categories (HVAC, DHW, vehicles, panel upgrades).
+source:
+  name: "Assumption"
+  detail: "Standard 3% real discount rate for household energy analysis."
+keys: []
+columns:
+  discount_rate:
+    description: "Annual real discount rate"
+    type: numeric
+    unit: "decimal"
+    range: [0, 0.10]

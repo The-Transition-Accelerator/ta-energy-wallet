@@ -1,0 +1,6 @@
+heating_system,alt_heating_system,adoption_share
+furnace,heat_pump,1
+furnace,furnace,0
+heat_pump,heat_pump,1
+boiler,heat_pump,1
+boiler,boiler,0

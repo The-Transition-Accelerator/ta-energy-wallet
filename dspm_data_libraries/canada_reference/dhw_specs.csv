@@ -1,0 +1,12 @@
+equipment_config_id,equipment_config_name,equipment_group,equipment_energy_source,cop
+config_dhw_res_001,electric resistance,residential dhw,electricity,1
+config_dhw_res_002,gas,residential dhw,gas,0.67
+config_dhw_res_003,oil,residential dhw,oil,0.67
+config_dhw_res_004,propane,residential dhw,propane,0.67
+config_dhw_res_005,wood,residential dhw,wood,0.5
+config_dhw_res_009,HPWH,residential dhw,electricity,3.5
+config_dhw_com_001,electric resistance,commercial dhw,electricity,1
+config_dhw_com_002,gas,commercial dhw,gas,0.78
+config_dhw_com_003,oil,commercial dhw,oil,0.78
+config_dhw_com_004,steam,commercial dhw,steam,0.78
+config_dhw_com_005,other,commercial dhw,other,0.78

@@ -1,0 +1,52 @@
+title: "HVAC System Distribution"
+question: "Who heats with what system?"
+topic: space_heating_cooling
+description: >
+  Defines the distribution of baseline HVAC system types by climate zone and
+  dwelling type. System names encode fuel type, efficiency tier, and whether
+  air conditioning is included (e.g., "condensing gas w AC", "ashp w electric backup").
+source:
+  name: "DSPM Canada Reference Library"
+  detail: "Equipment share data from CEUD 2021, mapped to Energy Wallet HVAC categories."
+keys: [climate_zone, dwelling_type]
+columns:
+  climate_zone:
+    description: "Climate zone identifier"
+    type: categorical
+    values: [CZ_5, CZ_6, CZ_7A]
+  dwelling_type:
+    description: "Dwelling type category"
+    type: categorical
+    values: [sfd, row, apt, mob]
+  hvac_system:
+    description: "HVAC system configuration name"
+    type: categorical
+    values:
+      - "ashp w electric backup"
+      - "ashp w gas backup"
+      - "ashp w oil backup"
+      - "ashp w propane backup"
+      - "ashp w wood backup"
+      - "ccashp w electric backup"
+      - "ccashp w gas backup"
+      - "ccashp w oil backup"
+      - "ccashp w propane backup"
+      - "ccashp w wood backup"
+      - "condensing gas w AC"
+      - "condensing gas wo AC"
+      - "electric resistance w AC"
+      - "electric resistance wo AC"
+      - "gshp"
+      - "non-condensing gas w AC"
+      - "non-condensing gas wo AC"
+      - "oil w AC"
+      - "oil wo AC"
+      - "propane w AC"
+      - "propane wo AC"
+      - "wood w AC"
+      - "wood wo AC"
+  population_share:
+    description: "Share of households with this HVAC system within the climate zone and dwelling type"
+    type: numeric
+    unit: "proportion"
+    range: [0, 1]

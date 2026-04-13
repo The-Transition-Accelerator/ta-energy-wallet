@@ -1,0 +1,29 @@
+title: "Primary Vehicle Type Distribution"
+question: "What type of vehicle do households drive?"
+topic: vehicles
+description: >
+  Defines the distribution of primary vehicle ownership by type (car, SUV,
+  truck, or none), differentiated by income quintile. Shares are normalized
+  within each quintile from the source data (which reports shares of total
+  households).
+source:
+  name: "Statistics Canada"
+  detail: "Survey of Household Spending: Public Use Microdata File, 2019. Table 6 from TA Energy Wallet Analysis — Ontario Utility."
+notes:
+  - "Shares are not differentiated by dwelling type."
+  - "Source data reports shares of total households; normalized to within-quintile proportions."
+keys: [income_quintile]
+columns:
+  income_quintile:
+    description: "Income quintile tier"
+    type: categorical
+    values: ["1st", "2nd", "3rd", "4th", "5th"]
+  vehicle_1_type:
+    description: "Primary vehicle type"
+    type: categorical
+    values: [car, SUV, truck, none]
+  population_share:
+    description: "Share of households with this vehicle type within the income quintile"
+    type: numeric
+    unit: "proportion"
+    range: [0, 1]

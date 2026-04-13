@@ -1,0 +1,20 @@
+title: "Income Quintile Distribution"
+question: "How are households distributed by income?"
+topic: demographics
+description: >
+  Defines income quintile population weights. All five quintiles are represented
+  at equal 20% shares, by definition.
+source:
+  name: "By definition"
+  detail: "Quintiles divide the population into five equal groups of 20% each."
+keys: []
+columns:
+  income_quintile:
+    description: "Income quintile tier (1st = lowest, 5th = highest)"
+    type: categorical
+    values: ["1st", "2nd", "3rd", "4th", "5th"]
+  population_share:
+    description: "Share of households in this income tier"
+    type: numeric
+    unit: "proportion"
+    range: [0, 1]

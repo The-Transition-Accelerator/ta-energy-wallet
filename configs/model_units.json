@@ -1,0 +1,241 @@
+{
+  "$description": "Authoritative unit specification for all numeric parameters used in Energy Wallet model calculations (Steps 3-5). Skills that create or edit input files MUST reference this file to ensure values are in the correct units. Template patterns use {N} for vehicle slot (1,2) and {s} for config suffix (base,alt), matching required.py conventions.",
+
+  "energy_prices": {
+    "cost_electricity_home": {
+      "unit": "$/GJ",
+      "description": "Residential electricity rate"
+    },
+    "cost_natural_gas_home": {
+      "unit": "$/GJ",
+      "description": "Natural gas rate"
+    },
+    "cost_oil_home": {
+      "unit": "$/GJ",
+      "description": "Heating oil rate"
+    },
+    "cost_propane_home": {
+      "unit": "$/GJ",
+      "description": "Propane rate"
+    },
+    "cost_wood_home": {
+      "unit": "$/GJ",
+      "description": "Wood fuel rate"
+    },
+    "cost_gasoline": {
+      "unit": "$/GJ",
+      "description": "Gasoline price"
+    },
+    "cost_electricity_level2": {
+      "unit": "$/GJ",
+      "description": "Public Level 2 EV charging rate"
+    },
+    "cost_electricity_fast": {
+      "unit": "$/GJ",
+      "description": "DCFC fast charging rate"
+    },
+    "electricity_fixed_charge_monthly": {
+      "unit": "$/month",
+      "description": "Monthly fixed electricity charge (annualized by multiplying by 12)"
+    },
+    "natural_gas_fixed_charge_monthly": {
+      "unit": "$/month",
+      "description": "Monthly fixed natural gas charge (annualized by multiplying by 12)"
+    }
+  },
+
+  "financial": {
+    "discount_rate": {
+      "unit": "decimal",
+      "description": "Annual discount rate (e.g. 0.03 = 3%)"
+    }
+  },
+
+  "vehicle_parameters": {
+    "vehicle_{N}_purchase_cost_{s}": {
+      "unit": "$",
+      "description": "Vehicle purchase cost"
+    },
+    "vehicle_{N}_assumed_life_{s}": {
+      "unit": "years",
+      "description": "Vehicle expected useful life"
+    },
+    "vehicle_{N}_maintenance_cost_per_km_{s}": {
+      "unit": "$/km",
+      "description": "Vehicle maintenance cost per kilometre"
+    },
+    "vehicle_{N}_efficiency_gas_{s}": {
+      "unit": "GJ/km",
+      "description": "Gasoline energy intensity per kilometre"
+    },
+    "vehicle_{N}_efficiency_electric_{s}": {
+      "unit": "kWh/km",
+      "description": "Electric energy intensity per kilometre (converted to GJ in calculations via *0.0036)"
+    },
+    "ev_{N}_efficiency_factor_{s}": {
+      "unit": "dimensionless",
+      "description": "EV climate derating factor (<=1 increases consumption; energy divided by this factor)"
+    },
+    "ev_{N}_pct_charged_home_{s}": {
+      "unit": "decimal",
+      "description": "Fraction of EV charging done at home (0-1)"
+    },
+    "ev_{N}_pct_charged_level2_{s}": {
+      "unit": "decimal",
+      "description": "Fraction of EV charging done at public Level 2 (0-1)"
+    },
+    "ev_{N}_pct_charged_fast_{s}": {
+      "unit": "decimal",
+      "description": "Fraction of EV charging done at DCFC (0-1)"
+    },
+    "vkt_{N}_annual_{s}": {
+      "unit": "km/year",
+      "description": "Annual vehicle kilometres travelled"
+    }
+  },
+
+  "hvac_parameters": {
+    "hvac_equipment_cost_{s}": {
+      "unit": "$",
+      "description": "HVAC system equipment cost"
+    },
+    "hvac_assumed_life_{s}": {
+      "unit": "years",
+      "description": "HVAC system expected useful life"
+    },
+    "hvac_maintenance_cost_annual_{s}": {
+      "unit": "$/year",
+      "description": "HVAC annual maintenance cost"
+    },
+    "heating_load_annual_{s}": {
+      "unit": "GJ/year",
+      "description": "Total annual space heating load (delivered heat)"
+    },
+    "cooling_load_annual_{s}": {
+      "unit": "GJ/year",
+      "description": "Total annual space cooling load (delivered cooling)"
+    },
+    "heating_system_proportion_gas_{s}": {
+      "unit": "decimal",
+      "description": "Fraction of heating load served by natural gas (0-1)"
+    },
+    "heating_system_proportion_electric_{s}": {
+      "unit": "decimal",
+      "description": "Fraction of heating load served by electricity (0-1)"
+    },
+    "heating_system_proportion_oil_{s}": {
+      "unit": "decimal",
+      "description": "Fraction of heating load served by oil (0-1)"
+    },
+    "heating_system_proportion_propane_{s}": {
+      "unit": "decimal",
+      "description": "Fraction of heating load served by propane (0-1)"
+    },
+    "heating_system_proportion_wood_{s}": {
+      "unit": "decimal",
+      "description": "Fraction of heating load served by wood (0-1)"
+    },
+    "heating_system_efficiency_gas_{s}": {
+      "unit": "dimensionless",
+      "description": "Heating system efficiency for natural gas (AFUE or COP)"
+    },
+    "heating_system_efficiency_electric_{s}": {
+      "unit": "dimensionless",
+      "description": "Heating system efficiency for electricity (COP)"
+    },
+    "heating_system_efficiency_oil_{s}": {
+      "unit": "dimensionless",
+      "description": "Heating system efficiency for oil (AFUE)"
+    },
+    "heating_system_efficiency_propane_{s}": {
+      "unit": "dimensionless",
+      "description": "Heating system efficiency for propane (AFUE)"
+    },
+    "heating_system_efficiency_wood_{s}": {
+      "unit": "dimensionless",
+      "description": "Heating system efficiency for wood"
+    },
+    "cooling_system_efficiency_{s}": {
+      "unit": "dimensionless",
+      "description": "Cooling system COP"
+    }
+  },
+
+  "dhw_parameters": {
+    "dhw_equipment_cost_{s}": {
+      "unit": "$",
+      "description": "DHW system equipment cost"
+    },
+    "dhw_assumed_life_{s}": {
+      "unit": "years",
+      "description": "DHW system expected useful life"
+    },
+    "dhw_maintenance_cost_annual_{s}": {
+      "unit": "$/year",
+      "description": "DHW annual maintenance cost"
+    },
+    "dhw_load_annual_{s}": {
+      "unit": "GJ/year",
+      "description": "Total annual domestic hot water load (delivered heat)"
+    },
+    "dhw_system_proportion_gas_{s}": {
+      "unit": "decimal",
+      "description": "Fraction of DHW load served by natural gas (0-1)"
+    },
+    "dhw_system_proportion_electric_{s}": {
+      "unit": "decimal",
+      "description": "Fraction of DHW load served by electricity (0-1)"
+    },
+    "dhw_system_proportion_oil_{s}": {
+      "unit": "decimal",
+      "description": "Fraction of DHW load served by oil (0-1)"
+    },
+    "dhw_system_proportion_propane_{s}": {
+      "unit": "decimal",
+      "description": "Fraction of DHW load served by propane (0-1)"
+    },
+    "dhw_system_proportion_wood_{s}": {
+      "unit": "decimal",
+      "description": "Fraction of DHW load served by wood (0-1)"
+    },
+    "dhw_system_efficiency_gas_{s}": {
+      "unit": "dimensionless",
+      "description": "DHW system efficiency for natural gas (energy factor or COP)"
+    },
+    "dhw_system_efficiency_electric_{s}": {
+      "unit": "dimensionless",
+      "description": "DHW system efficiency for electricity (energy factor or COP)"
+    },
+    "dhw_system_efficiency_oil_{s}": {
+      "unit": "dimensionless",
+      "description": "DHW system efficiency for oil"
+    },
+    "dhw_system_efficiency_propane_{s}": {
+      "unit": "dimensionless",
+      "description": "DHW system efficiency for propane"
+    },
+    "dhw_system_efficiency_wood_{s}": {
+      "unit": "dimensionless",
+      "description": "DHW system efficiency for wood"
+    }
+  },
+
+  "other_parameters": {
+    "other_electricity_annual_{s}": {
+      "unit": "GJ/year",
+      "description": "Annual electricity for non-HVAC/DHW end-uses (appliances, lighting)"
+    },
+    "other_natural_gas_annual_{s}": {
+      "unit": "GJ/year",
+      "description": "Annual natural gas for non-HVAC/DHW end-uses (cooking)"
+    },
+    "panel_upgrade_cost_{s}": {
+      "unit": "$",
+      "description": "Electrical panel upgrade cost"
+    },
+    "panel_assumed_life_{s}": {
+      "unit": "years",
+      "description": "Panel upgrade expected useful life"
+    }
+  }
+}

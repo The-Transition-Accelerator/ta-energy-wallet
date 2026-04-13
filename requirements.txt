@@ -1,0 +1,6 @@
+pandas
+numpy-financial
+plotly
+dash
+dash-ag-grid
+pyyaml

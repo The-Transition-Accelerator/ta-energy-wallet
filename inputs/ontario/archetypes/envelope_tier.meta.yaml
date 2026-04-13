@@ -1,0 +1,30 @@
+title: "Building Envelope Performance Tiers"
+question: "How energy-efficient are the building envelopes?"
+topic: demographics
+description: >
+  Segments households into three building envelope performance tiers (poor,
+  average, good) by climate zone and dwelling type. Derived from DSPM's 10-bin
+  envelope distribution collapsed into 3 tiers. Weights are calibrated so that
+  weighted averages align with CEUD source data.
+source:
+  name: "DSPM Canada Reference Library"
+  detail: "Envelope bin aggregation: bins [-5,-4,-3] → poor, [-2,-1,1] → average, [2,3,4,5] → good."
+keys: [climate_zone, dwelling_type]
+columns:
+  climate_zone:
+    description: "Climate zone identifier"
+    type: categorical
+    values: [CZ_5, CZ_6, CZ_7A]
+  dwelling_type:
+    description: "Dwelling type category"
+    type: categorical
+    values: [sfd, row, apt, mob]
+  envelope_tier:
+    description: "Building envelope performance tier"
+    type: categorical
+    values: [poor, average, good]
+  population_share:
+    description: "Share of households in this envelope tier within the climate zone and dwelling type"
+    type: numeric
+    unit: "proportion"
+    range: [0, 1]

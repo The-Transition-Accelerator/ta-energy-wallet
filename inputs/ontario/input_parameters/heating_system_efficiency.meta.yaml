@@ -1,0 +1,101 @@
+title: "Heating & Cooling System Efficiency"
+question: "How efficient is each heating/cooling system?"
+topic: space_heating_cooling
+description: >
+  Heating and cooling system efficiencies by HVAC system type and climate zone.
+  Includes fuel proportion vectors (share of heating load met by each fuel) and
+  seasonal efficiency values for each fuel. Heat pump seasonal COPs vary by
+  climate zone to reflect cold-weather performance derating.
+source:
+  name: "DSPM Canada Reference Library"
+  detail: "COP curves collapsed to annual-average efficiency per climate zone."
+notes:
+  - "Heat pump efficiencies represent whole-system annual-average COP, not compressor-only sCOP. This means backup system efficiency (e.g., electric resistance) is factored in, resulting in lower values than compressor-only ratings."
+keys: [climate_zone, hvac_system]
+columns:
+  climate_zone:
+    description: "Climate zone identifier"
+    type: categorical
+    values: [CZ_5, CZ_6, CZ_7A]
+  hvac_system:
+    description: "HVAC system configuration name"
+    type: categorical
+    values:
+      - "ashp w electric backup"
+      - "ashp w gas backup"
+      - "ashp w oil backup"
+      - "ashp w propane backup"
+      - "ashp w wood backup"
+      - "ccashp w electric backup"
+      - "ccashp w gas backup"
+      - "ccashp w oil backup"
+      - "ccashp w propane backup"
+      - "ccashp w wood backup"
+      - "condensing gas w AC"
+      - "condensing gas wo AC"
+      - "electric resistance w AC"
+      - "electric resistance wo AC"
+      - "gshp"
+      - "non-condensing gas w AC"
+      - "non-condensing gas wo AC"
+      - "oil w AC"
+      - "oil wo AC"
+      - "propane w AC"
+      - "propane wo AC"
+      - "wood w AC"
+      - "wood wo AC"
+  heating_system_proportion_gas:
+    description: "Share of heating load met by natural gas"
+    type: numeric
+    unit: "decimal"
+    range: [0, 1]
+  heating_system_proportion_electric:
+    description: "Share of heating load met by electricity"
+    type: numeric
+    unit: "decimal"
+    range: [0, 1]
+  heating_system_proportion_oil:
+    description: "Share of heating load met by fuel oil"
+    type: numeric
+    unit: "decimal"
+    range: [0, 1]
+  heating_system_proportion_propane:
+    description: "Share of heating load met by propane"
+    type: numeric
+    unit: "decimal"
+    range: [0, 1]
+  heating_system_proportion_wood:
+    description: "Share of heating load met by wood"
+    type: numeric
+    unit: "decimal"
+    range: [0, 1]
+  heating_system_efficiency_gas:
+    description: "Seasonal efficiency for gas heating (AFUE or equivalent)"
+    type: numeric
+    unit: "dimensionless"
+    range: [0, 5]
+  heating_system_efficiency_electric:
+    description: "Seasonal efficiency for electric heating (COP or resistance=1.0)"
+    type: numeric
+    unit: "dimensionless"
+    range: [0, 5]
+  heating_system_efficiency_oil:
+    description: "Seasonal efficiency for oil heating (AFUE or equivalent)"
+    type: numeric
+    unit: "dimensionless"
+    range: [0, 5]
+  heating_system_efficiency_propane:
+    description: "Seasonal efficiency for propane heating (AFUE or equivalent)"
+    type: numeric
+    unit: "dimensionless"
+    range: [0, 5]
+  heating_system_efficiency_wood:
+    description: "Seasonal efficiency for wood heating"
+    type: numeric
+    unit: "dimensionless"
+    range: [0, 5]
+  cooling_system_efficiency:
+    description: "Seasonal cooling efficiency (SEER-equivalent COP)"
+    type: numeric
+    unit: "dimensionless"
+    range: [0, 10]

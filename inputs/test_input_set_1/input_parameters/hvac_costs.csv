@@ -1,0 +1,7 @@
+dwelling_type,heating_system,hvac_equipment_cost,hvac_assumed_life,hvac_maintenance_cost_annual
+single_family,furnace,6000,20,150
+single_family,heat_pump,10000,18,200
+single_family,boiler,7000,25,175
+apartment,furnace,5000,20,125
+apartment,heat_pump,8500,18,175
+apartment,boiler,6000,25,150

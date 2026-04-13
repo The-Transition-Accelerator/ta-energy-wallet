@@ -1,0 +1,23 @@
+title: "Annual Vehicle Kilometres Travelled"
+question: "How far do people drive?"
+topic: vehicles
+description: >
+  Annual vehicle kilometres travelled (VKT) by vehicle type. Based on Ontario
+  2019 data to avoid COVID-era distortions. The same VKT applies to both
+  baseline and alternative configurations.
+source:
+  name: "CEUD – Transportation – Ontario"
+  detail: "Table 21 (cars) and Table 34 (trucks/SUVs)."
+notes:
+  - "VKT is not year-varying or climate-zone-varying in this version."
+keys: [vehicle_type]
+columns:
+  vehicle_type:
+    description: "Vehicle type"
+    type: categorical
+    values: [none, car, truck, SUV]
+  vkt_annual:
+    description: "Annual kilometres travelled"
+    type: numeric
+    unit: "km/year"
+    range: [0, 18000]

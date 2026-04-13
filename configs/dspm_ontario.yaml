@@ -1,0 +1,82 @@
+# DSPM-to-Energy-Wallet converter configuration for Ontario
+#
+# Name mappings (HVAC, DHW, fuel, climate zones) are auto-derived from
+# the DSPM data library. This config only specifies policy choices:
+# which province, how to group envelope bins, and what alternative
+# configurations to model.
+
+province: "ON"
+output_set_name: "dspm_ontario"
+
+# Path to DSPM canada_reference data library (relative to repo root)
+dspm_data_path: "dspm_data_libraries/canada_reference/"
+
+# --- Envelope bin groups ---
+# DSPM has 10 bins (-5 to -1, 1 to 5, no zero)
+# Collapsed to 3 tiers for EW
+envelope_bin_groups:
+  poor: [-5, -4, -3]
+  average: [-2, -1, 1]
+  good: [2, 3, 4, 5]
+
+# --- Building types ---
+# Residential types to include (filters building_stock_library)
+building_types:
+  - sfd
+  - row
+  - apt
+  - mob
+
+# --- Alternative configurations ---
+# Defines baseline → alternative system mappings
+# Names must match DSPM equipment_config_name values from hvac_specs.csv / dhw_specs.csv
+alt_configs:
+  alt_hvac_system:
+    # Gas furnaces → heat pumps with gas backup
+    - baseline: "non-condensing gas wo AC"
+      alternative: "ashp w gas backup"
+      adoption_share: 1.0
+    - baseline: "non-condensing gas w AC"
+      alternative: "ashp w gas backup"
+      adoption_share: 1.0
+    - baseline: "condensing gas wo AC"
+      alternative: "ccashp w gas backup"
+      adoption_share: 1.0
+    - baseline: "condensing gas w AC"
+      alternative: "ccashp w gas backup"
+      adoption_share: 1.0
+    # Oil furnaces → heat pumps with oil backup
+    - baseline: "oil wo AC"
+      alternative: "ashp w oil backup"
+      adoption_share: 1.0
+    - baseline: "oil w AC"
+      alternative: "ashp w oil backup"
+      adoption_share: 1.0
+    # Propane furnaces → heat pumps with propane backup
+    - baseline: "propane wo AC"
+      alternative: "ashp w propane backup"
+      adoption_share: 1.0
+    - baseline: "propane w AC"
+      alternative: "ashp w propane backup"
+      adoption_share: 1.0
+    # Electric baseboard → cold climate ASHP (all-electric upgrade)
+    - baseline: "electric resistance wo AC"
+      alternative: "ccashp w electric backup"
+      adoption_share: 1.0
+    - baseline: "electric resistance w AC"
+      alternative: "ccashp w electric backup"
+      adoption_share: 1.0
+  alt_dhw_type:
+    - baseline: "gas"
+      alternative: "HPWH"
+      adoption_share: 1.0
+    - baseline: "electric resistance"
+      alternative: "HPWH"
+      adoption_share: 1.0
+    - baseline: "oil"
+      alternative: "HPWH"
+      adoption_share: 1.0
+
+# --- Vehicle strategy ---
+# "none" = placeholder vehicle files (vehicles out of scope for MVP)
+vehicle_strategy: "none"

@@ -1,0 +1,73 @@
+climate_zone,dwelling_type,dhw_system,population_share
+CZ_5,apt,HPWH,0.0
+CZ_5,apt,electric resistance,0.17417
+CZ_5,apt,gas,0.81
+CZ_5,apt,oil,0.005
+CZ_5,apt,propane,0.01
+CZ_5,apt,wood,0.00083
+CZ_5,mob,HPWH,0.0
+CZ_5,mob,electric resistance,0.17417
+CZ_5,mob,gas,0.81
+CZ_5,mob,oil,0.005
+CZ_5,mob,propane,0.01
+CZ_5,mob,wood,0.00083
+CZ_5,row,HPWH,0.0
+CZ_5,row,electric resistance,0.17417
+CZ_5,row,gas,0.81
+CZ_5,row,oil,0.005
+CZ_5,row,propane,0.01
+CZ_5,row,wood,0.00083
+CZ_5,sfd,HPWH,0.0
+CZ_5,sfd,electric resistance,0.17417
+CZ_5,sfd,gas,0.81
+CZ_5,sfd,oil,0.005
+CZ_5,sfd,propane,0.01
+CZ_5,sfd,wood,0.00083
+CZ_6,apt,HPWH,0.0
+CZ_6,apt,electric resistance,0.17417
+CZ_6,apt,gas,0.81
+CZ_6,apt,oil,0.005
+CZ_6,apt,propane,0.01
+CZ_6,apt,wood,0.00083
+CZ_6,mob,HPWH,0.0
+CZ_6,mob,electric resistance,0.17417
+CZ_6,mob,gas,0.81
+CZ_6,mob,oil,0.005
+CZ_6,mob,propane,0.01
+CZ_6,mob,wood,0.00083
+CZ_6,row,HPWH,0.0
+CZ_6,row,electric resistance,0.17417
+CZ_6,row,gas,0.81
+CZ_6,row,oil,0.005
+CZ_6,row,propane,0.01
+CZ_6,row,wood,0.00083
+CZ_6,sfd,HPWH,0.0
+CZ_6,sfd,electric resistance,0.17417
+CZ_6,sfd,gas,0.81
+CZ_6,sfd,oil,0.005
+CZ_6,sfd,propane,0.01
+CZ_6,sfd,wood,0.00083
+CZ_7A,apt,HPWH,0.0
+CZ_7A,apt,electric resistance,0.17417
+CZ_7A,apt,gas,0.81
+CZ_7A,apt,oil,0.005
+CZ_7A,apt,propane,0.01
+CZ_7A,apt,wood,0.00083
+CZ_7A,mob,HPWH,0.0
+CZ_7A,mob,electric resistance,0.17417
+CZ_7A,mob,gas,0.81
+CZ_7A,mob,oil,0.005
+CZ_7A,mob,propane,0.01
+CZ_7A,mob,wood,0.00083
+CZ_7A,row,HPWH,0.0
+CZ_7A,row,electric resistance,0.17417
+CZ_7A,row,gas,0.81
+CZ_7A,row,oil,0.005
+CZ_7A,row,propane,0.01
+CZ_7A,row,wood,0.00083
+CZ_7A,sfd,HPWH,0.0
+CZ_7A,sfd,electric resistance,0.17417
+CZ_7A,sfd,gas,0.81
+CZ_7A,sfd,oil,0.005
+CZ_7A,sfd,propane,0.01
+CZ_7A,sfd,wood,0.00083

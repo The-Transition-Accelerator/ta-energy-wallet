@@ -1,0 +1,30 @@
+title: "Other Residential Energy Uses"
+question: "How much energy is used for appliances, lighting, etc.?"
+topic: other_energy
+description: >
+  Annual electricity and natural gas consumption for appliances, lighting, and
+  other non-HVAC/DHW end-uses, by dwelling type. Values are held constant across
+  the study period and are identical for baseline and upgrade configurations.
+source:
+  name: "DSPM Canada Reference Library"
+  detail: "Based on CEUD appliance and lighting energy intensity data."
+notes:
+  - "Values are not year-varying; the same values apply across all projection years."
+  - "These values are the same for baseline and alternative configurations — no electrification impact."
+  - "Natural gas consumption (~0.22 GJ/year) represents cooking gas only."
+keys: [dwelling_type]
+columns:
+  dwelling_type:
+    description: "Dwelling type category"
+    type: categorical
+    values: [sfd, row, apt, mob]
+  other_electricity_annual:
+    description: "Annual electricity consumption for non-HVAC/DHW end-uses"
+    type: numeric
+    unit: "GJ/year"
+    range: [10, 15]
+  other_natural_gas_annual:
+    description: "Annual natural gas consumption for non-HVAC/DHW end-uses (cooking, etc.)"
+    type: numeric
+    unit: "GJ/year"
+    range: [0, 1]

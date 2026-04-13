@@ -1,0 +1,52 @@
+name: ontario
+title: "Ontario Household Energy Affordability"
+description: >
+  A proof-of-concept Energy Wallet data library representing Ontario households.
+  Model inputs are based on a combination of the Transition Accelerator's
+  Demand-Side Pathways Model (DSPM) Canada Reference Data Library, which is
+  primarily based on NRCan's Comprehensive Energy Use Database (CEUD) for base
+  year 2021, and other Ontario-specific data sources from a previously conducted
+  energy wallet analysis for a utility in Ontario. The data library covers 3
+  climate zones, 4 dwelling types, 5 income quintiles, 23 HVAC system
+  configurations, and 3 projection years (2025-2035). It evaluates a full
+  electrification scenario: all baseline heating systems transition to cold-climate
+  ASHP with electric backup, DHW to 80% electric resistance / 20% HPWH, and all
+  ICE vehicles to EV.
+version: "0.1.0"
+geography:
+  country: Canada
+  province: Ontario
+  climate_zones: [CZ_5, CZ_6, CZ_7A]
+currency: CAD
+currency_year: 2025
+projection_years: [2025, 2030, 2035]
+sources:
+  - name: "DSPM Canada Reference Library"
+    description: "Calibrated building stock model for Ontario (heating/cooling loads, HVAC system shares, building envelopes)"
+  - name: "TA Energy Wallet Analysis — Ontario Utility"
+    description: "Equipment costs, efficiencies, vehicle parameters, and charging splits from a previously conducted energy wallet analysis"
+  - name: "Canada Energy Regulator — Canada's Energy Future 2026"
+    description: "Residential and transportation energy prices (electricity, natural gas, oil, gasoline)"
+  - name: "CEUD"
+    description: "Comprehensive Energy Use Database — DHW loads, vehicle kilometres travelled, appliance energy"
+  - name: "Statistics Canada"
+    description: "Vehicle type distributions (SHS PUMF 2019) and EV registration shares (Table 23-10-0308-01)"
+created: 2025-10-15
+last_updated: 2026-04-12
+authors:
+  - name: "Transition Accelerator"
+topics:
+  - key: demographics
+    title: "Demographics & Housing Stock"
+  - key: space_heating_cooling
+    title: "Space Heating & Cooling"
+  - key: hot_water
+    title: "Hot Water"
+  - key: vehicles
+    title: "Vehicles"
+  - key: energy_prices
+    title: "Energy Prices & Financial"
+  - key: other_energy
+    title: "Other Residential Energy"
+  - key: electrical_panel
+    title: "Electrical Panel"

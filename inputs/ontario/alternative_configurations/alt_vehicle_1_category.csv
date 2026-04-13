@@ -1,0 +1,5 @@
+vehicle_1_type,vehicle_1_category,alt_vehicle_1_category,adoption_share
+car,ICE,EV,1.0
+SUV,ICE,EV,1.0
+truck,ICE,EV,1.0
+none,none,none,1.0

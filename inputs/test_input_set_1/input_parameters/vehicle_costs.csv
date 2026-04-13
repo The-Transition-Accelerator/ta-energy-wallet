@@ -1,0 +1,6 @@
+vehicle_type,vehicle_category,vehicle_purchase_cost,vehicle_assumed_life,vehicle_maintenance_cost_per_km
+car,ICE,35000,12,0.08
+car,EV,42000,15,0.04
+truck,ICE,45000,12,0.09
+truck,EV,55000,15,0.05
+none,none,0,1,0

@@ -1,0 +1,29 @@
+title: "Vehicle Full Electrification Scenario"
+question: "What if all ICE vehicles switch to EVs?"
+topic: vehicles
+description: >
+  Full electrification scenario: all ICE vehicles are replaced with battery
+  electric vehicles at 100% adoption. Applies uniformly to all vehicle types
+  (car, SUV, truck). Households with no vehicle remain unchanged.
+source:
+  name: "User-defined scenario"
+  detail: "Full electrification scenario definition."
+keys: [vehicle_1_type, vehicle_1_category]
+columns:
+  vehicle_1_type:
+    description: "Primary vehicle type"
+    type: categorical
+    values: [car, SUV, truck, none]
+  vehicle_1_category:
+    description: "Baseline powertrain category"
+    type: categorical
+    values: [ICE, none]
+  alt_vehicle_1_category:
+    description: "Alternative powertrain category"
+    type: categorical
+    values: [EV, none]
+  adoption_share:
+    description: "Share of households adopting this powertrain"
+    type: numeric
+    unit: "proportion"
+    range: [0, 1]

@@ -1,0 +1,7 @@
+dwelling_type,heating_system,population_share
+single_family,furnace,0.60
+single_family,heat_pump,0.30
+single_family,boiler,0.10
+apartment,furnace,0.40
+apartment,heat_pump,0.55
+apartment,boiler,0.05

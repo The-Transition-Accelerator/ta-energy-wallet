@@ -1,0 +1,16 @@
+alt_hvac_system,alt_vehicle_1_category,panel_upgrade_cost,panel_assumed_life
+ashp w gas backup,none,0,25
+ashp w gas backup,ICE,0,25
+ashp w gas backup,EV,5000,25
+ashp w oil backup,none,0,25
+ashp w oil backup,ICE,0,25
+ashp w oil backup,EV,5000,25
+ashp w propane backup,none,0,25
+ashp w propane backup,ICE,0,25
+ashp w propane backup,EV,5000,25
+ccashp w electric backup,none,0,25
+ccashp w electric backup,ICE,0,25
+ccashp w electric backup,EV,5000,25
+ccashp w gas backup,none,0,25
+ccashp w gas backup,ICE,0,25
+ccashp w gas backup,EV,5000,25

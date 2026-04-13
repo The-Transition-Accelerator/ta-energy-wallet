@@ -1,0 +1,39 @@
+title: "Electrical Panel Upgrade Triggers & Costs"
+question: "When is a panel upgrade needed and what does it cost?"
+topic: electrical_panel
+description: >
+  Defines logic for when an electrical panel upgrade is triggered in the
+  alternative configuration. A $5,000 panel upgrade cost is applied when a
+  household adopts both an electrified HVAC system (any heat pump type) and
+  an EV. Assumed panel life is 25 years.
+source:
+  name: "User assumption"
+  detail: "Panel upgrade trigger logic and cost estimate."
+notes:
+  - "The logic determining when a panel upgrade is triggered (HP + EV) should be reviewed in future iterations to better reflect real-world conditions."
+  - "Panel upgrade cost of $5,000 is a rough estimate; actual costs vary by dwelling type and existing panel capacity."
+keys: [alt_hvac_system, alt_vehicle_1_category]
+columns:
+  alt_hvac_system:
+    description: "Alternative HVAC system in the upgrade scenario"
+    type: categorical
+    values:
+      - "ashp w gas backup"
+      - "ashp w oil backup"
+      - "ashp w propane backup"
+      - "ccashp w electric backup"
+      - "ccashp w gas backup"
+  alt_vehicle_1_category:
+    description: "Alternative primary vehicle powertrain"
+    type: categorical
+    values: [none, ICE, EV]
+  panel_upgrade_cost:
+    description: "Cost of electrical panel upgrade"
+    type: numeric
+    unit: "$"
+    range: [0, 5000]
+  panel_assumed_life:
+    description: "Expected panel lifespan for annualization"
+    type: numeric
+    unit: "years"
+    range: [25, 25]

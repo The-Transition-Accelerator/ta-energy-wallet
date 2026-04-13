@@ -1,0 +1,66 @@
+title: "DHW System Efficiency"
+question: "How efficient is each hot water system?"
+topic: hot_water
+description: >
+  DHW system fuel proportions and efficiencies by system type. Defines which
+  fuel each system uses and its operating efficiency. Each system has a single
+  primary fuel with proportion = 1.0 and all others = 0.0.
+source:
+  name: "TA Energy Wallet Analysis — Ontario Utility"
+  detail: "DHW system fuel proportions and efficiencies."
+keys: [dhw_system]
+columns:
+  dhw_system:
+    description: "Domestic hot water system type"
+    type: categorical
+    values: [HPWH, electric resistance, gas, oil, propane, wood]
+  dhw_system_proportion_gas:
+    description: "Share of DHW load met by natural gas"
+    type: numeric
+    unit: "decimal"
+    range: [0, 1]
+  dhw_system_proportion_electric:
+    description: "Share of DHW load met by electricity"
+    type: numeric
+    unit: "decimal"
+    range: [0, 1]
+  dhw_system_proportion_oil:
+    description: "Share of DHW load met by fuel oil"
+    type: numeric
+    unit: "decimal"
+    range: [0, 1]
+  dhw_system_proportion_propane:
+    description: "Share of DHW load met by propane"
+    type: numeric
+    unit: "decimal"
+    range: [0, 1]
+  dhw_system_proportion_wood:
+    description: "Share of DHW load met by wood"
+    type: numeric
+    unit: "decimal"
+    range: [0, 1]
+  dhw_system_efficiency_gas:
+    description: "Gas DHW system efficiency"
+    type: numeric
+    unit: "dimensionless"
+    range: [0, 5]
+  dhw_system_efficiency_electric:
+    description: "Electric DHW system efficiency (COP or resistance=1.0)"
+    type: numeric
+    unit: "dimensionless"
+    range: [0, 5]
+  dhw_system_efficiency_oil:
+    description: "Oil DHW system efficiency"
+    type: numeric
+    unit: "dimensionless"
+    range: [0, 5]
+  dhw_system_efficiency_propane:
+    description: "Propane DHW system efficiency"
+    type: numeric
+    unit: "dimensionless"
+    range: [0, 5]
+  dhw_system_efficiency_wood:
+    description: "Wood DHW system efficiency"
+    type: numeric
+    unit: "dimensionless"
+    range: [0, 5]

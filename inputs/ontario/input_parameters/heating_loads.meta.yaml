@@ -1,0 +1,31 @@
+title: "Annual Heating Loads"
+question: "How much heating energy is needed?"
+topic: space_heating_cooling
+description: >
+  Total annual space heating energy demand by climate zone, dwelling type, and
+  envelope performance tier. Values represent thermal energy output required
+  (delivered heat), not metered input energy.
+source:
+  name: "DSPM Canada Reference Library"
+  detail: "Calibrated to CEUD data with climate zone adjustments based on heating degree days."
+notes:
+  - "Loads are not year-varying; the same values apply across all projection years."
+keys: [climate_zone, dwelling_type, envelope_tier]
+columns:
+  climate_zone:
+    description: "Climate zone identifier"
+    type: categorical
+    values: [CZ_5, CZ_6, CZ_7A]
+  dwelling_type:
+    description: "Dwelling type category"
+    type: categorical
+    values: [sfd, row, apt, mob]
+  envelope_tier:
+    description: "Building envelope performance tier"
+    type: categorical
+    values: [poor, average, good]
+  heating_load_annual:
+    description: "Total annual space heating load delivered to the home"
+    type: numeric
+    unit: "GJ/year"
+    range: [5, 140]

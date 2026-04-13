@@ -1,0 +1,26 @@
+title: "DHW Electrification Scenario"
+question: "What if households switch to electric water heating?"
+topic: hot_water
+description: >
+  Full electrification scenario: all baseline DHW systems are replaced with
+  electric alternatives — 80% electric resistance and 20% heat pump water
+  heater (HPWH). Propane and wood DHW systems have no upgrade path and remain
+  at their baseline configuration.
+source:
+  name: "User-defined scenario"
+  detail: "Full electrification scenario definition. 80/20 split between electric resistance and HPWH."
+keys: [dhw_system]
+columns:
+  dhw_system:
+    description: "Baseline DHW system being replaced"
+    type: categorical
+    values: [electric resistance, gas, oil]
+  alt_dhw_system:
+    description: "Alternative DHW system"
+    type: categorical
+    values: [electric resistance, HPWH]
+  adoption_share:
+    description: "Share of households adopting this specific upgrade path"
+    type: numeric
+    unit: "proportion"
+    range: [0, 1]

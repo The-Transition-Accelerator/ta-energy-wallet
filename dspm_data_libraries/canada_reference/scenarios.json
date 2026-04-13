@@ -1,0 +1,20 @@
+{
+    "Demo - Default": {
+        "description": "Default demonstration scenario with no policy changes applied."
+    },
+    "Demo - Ottawa BAU": {
+        "description": "Business-as-usual scenario for Ottawa covering both residential and commercial sectors."
+    },
+    "Demo - Ottawa Res BAU": {
+        "description": "Business-as-usual scenario for Ottawa residential buildings only."
+    },
+    "Demo 2A - Ottawa Res 2030 Electrification": {
+        "description": "Ottawa residential electrification scenario targeting heat pump adoption by 2030."
+    },
+    "Demo 2B - 2A + Accelerated Retrofits": {
+        "description": "Builds on 2A with accelerated envelope retrofits to improve building performance."
+    },
+    "Demo 2C - 2B + Aggressive DR": {
+        "description": "Builds on 2B with aggressive demand response measures to reduce peak electricity demand."
+    }
+}

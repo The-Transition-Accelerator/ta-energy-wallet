@@ -1,0 +1,23 @@
+title: "DHW System Distribution"
+question: "Who has what hot water system?"
+topic: hot_water
+description: >
+  Defines the distribution of domestic hot water equipment types. Shares are
+  uniform across climate zones and dwelling types. Covers electric resistance,
+  natural gas, oil, propane, wood, and heat pump water heaters.
+source:
+  name: "DSPM Canada Reference Library"
+  detail: "Equipment share data from CEUD 2021."
+notes:
+  - "Shares are not differentiated by climate zone or dwelling type."
+keys: []
+columns:
+  dhw_system:
+    description: "Domestic hot water system type"
+    type: categorical
+    values: [HPWH, electric resistance, gas, oil, propane, wood]
+  population_share:
+    description: "Share of households with this DHW system"
+    type: numeric
+    unit: "proportion"
+    range: [0, 1]

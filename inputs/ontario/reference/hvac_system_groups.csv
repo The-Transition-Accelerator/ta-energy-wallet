@@ -1,0 +1,24 @@
+hvac_system,ac,heating_fuel,heating_technology
+ashp w electric backup,yes,Electricity,ASHP
+ashp w gas backup,yes,Electricity+Fuel,ASHP
+ashp w oil backup,yes,Electricity+Fuel,ASHP
+ashp w propane backup,yes,Electricity+Fuel,ASHP
+ashp w wood backup,yes,Electricity+Fuel,ASHP
+ccashp w electric backup,yes,Electricity,ASHP
+ccashp w gas backup,yes,Electricity+Fuel,ASHP
+ccashp w oil backup,yes,Electricity+Fuel,ASHP
+ccashp w propane backup,yes,Electricity+Fuel,ASHP
+ccashp w wood backup,yes,Electricity+Fuel,ASHP
+condensing gas w AC,yes,Natural Gas,Single Fuel Furnace
+condensing gas wo AC,no,Natural Gas,Single Fuel Furnace
+electric resistance w AC,yes,Electricity,Electric Resistance
+electric resistance wo AC,no,Electricity,Electric Resistance
+gshp,yes,Electricity,GSHP
+non-condensing gas w AC,yes,Natural Gas,Single Fuel Furnace
+non-condensing gas wo AC,no,Natural Gas,Single Fuel Furnace
+oil w AC,yes,Oil,Single Fuel Furnace
+oil wo AC,no,Oil,Single Fuel Furnace
+propane w AC,yes,Propane,Single Fuel Furnace
+propane wo AC,no,Propane,Single Fuel Furnace
+wood w AC,yes,Wood,Single Fuel Furnace
+wood wo AC,no,Wood,Single Fuel Furnace

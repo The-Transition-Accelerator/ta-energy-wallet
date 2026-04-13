@@ -1,0 +1,27 @@
+title: "Home EV Charging Access"
+question: "Which households can charge an EV at home?"
+topic: vehicles
+description: >
+  Defines the share of households with access to home EV charging by dwelling
+  type. Single-family detached homes have higher access; apartments and
+  multi-family have limited access.
+source:
+  name: "Pollution Probe & Electric Mobility Canada; Dunsky Energy + Climate Advisors"
+  detail: "Pollution Probe & Electric Mobility Canada (2025), 2024 Canadian Electric Vehicle Owner Charging Experience Survey. Dunsky Energy + Climate Advisors (2022), Updated Projections of Canada's Public Charging Infrastructure Needs, prepared for Natural Resources Canada."
+notes:
+  - "Data quality for home charging access rates is limited. Opportunities for improving this input with better data should be evaluated in future updates."
+keys: [dwelling_type]
+columns:
+  dwelling_type:
+    description: "Dwelling type category"
+    type: categorical
+    values: [sfd, row, apt, mob]
+  has_home_charging:
+    description: "Whether the household has home EV charging access"
+    type: categorical
+    values: ["yes", "no"]
+  population_share:
+    description: "Share of households with/without home charging within the dwelling type"
+    type: numeric
+    unit: "proportion"
+    range: [0, 1]

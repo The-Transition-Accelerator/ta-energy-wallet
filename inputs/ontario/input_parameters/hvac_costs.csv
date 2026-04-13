@@ -1,0 +1,93 @@
+dwelling_type,hvac_system,hvac_equipment_cost,hvac_assumed_life,hvac_maintenance_cost_annual
+sfd,non-condensing gas wo AC,4350,15,180
+row,non-condensing gas wo AC,4250,15,180
+apt,non-condensing gas wo AC,4250,15,180
+mob,non-condensing gas wo AC,4250,15,180
+sfd,non-condensing gas w AC,8250,15,300
+row,non-condensing gas w AC,7750,15,300
+apt,non-condensing gas w AC,7750,15,300
+mob,non-condensing gas w AC,7800,15,300
+sfd,condensing gas wo AC,4350,15,180
+row,condensing gas wo AC,4250,15,180
+apt,condensing gas wo AC,4250,15,180
+mob,condensing gas wo AC,4250,15,180
+sfd,condensing gas w AC,8250,15,300
+row,condensing gas w AC,7750,15,300
+apt,condensing gas w AC,7750,15,300
+mob,condensing gas w AC,7800,15,300
+sfd,oil wo AC,8100,15,180
+row,oil wo AC,8000,15,180
+apt,oil wo AC,8000,15,180
+mob,oil wo AC,8000,15,180
+sfd,oil w AC,8550,15,300
+row,oil w AC,8000,15,300
+apt,oil w AC,8000,15,300
+mob,oil w AC,8050,15,300
+sfd,propane wo AC,4600,15,430
+row,propane wo AC,4500,15,430
+apt,propane wo AC,4500,15,430
+mob,propane wo AC,4500,15,430
+sfd,propane w AC,8500,15,550
+row,propane w AC,8000,15,550
+apt,propane w AC,8000,15,550
+mob,propane w AC,8050,15,550
+sfd,electric resistance wo AC,2800,30,0
+row,electric resistance wo AC,2800,30,0
+apt,electric resistance wo AC,2800,30,0
+mob,electric resistance wo AC,2800,30,0
+sfd,electric resistance w AC,6750,15,120
+row,electric resistance w AC,6300,15,120
+apt,electric resistance w AC,6300,15,120
+mob,electric resistance w AC,6350,15,120
+sfd,wood wo AC,4600,15,180
+row,wood wo AC,4500,15,180
+apt,wood wo AC,4500,15,180
+mob,wood wo AC,4500,15,180
+sfd,wood w AC,8500,15,300
+row,wood w AC,8000,15,300
+apt,wood w AC,8000,15,300
+mob,wood w AC,8050,15,300
+sfd,ashp w electric backup,13450,15,120
+row,ashp w electric backup,11900,15,120
+apt,ashp w electric backup,11450,15,120
+mob,ashp w electric backup,11800,15,120
+sfd,ashp w gas backup,15000,15,120
+row,ashp w gas backup,13350,15,120
+apt,ashp w gas backup,12900,15,120
+mob,ashp w gas backup,13250,15,120
+sfd,ashp w oil backup,18750,15,120
+row,ashp w oil backup,17100,15,120
+apt,ashp w oil backup,16650,15,120
+mob,ashp w oil backup,17000,15,120
+sfd,ashp w propane backup,15250,15,120
+row,ashp w propane backup,13600,15,120
+apt,ashp w propane backup,13150,15,120
+mob,ashp w propane backup,13500,15,120
+sfd,ashp w wood backup,15250,15,120
+row,ashp w wood backup,13600,15,120
+apt,ashp w wood backup,13150,15,120
+mob,ashp w wood backup,13500,15,120
+sfd,ccashp w electric backup,15650,15,120
+row,ccashp w electric backup,14050,15,120
+apt,ccashp w electric backup,13600,15,120
+mob,ccashp w electric backup,13950,15,120
+sfd,ccashp w gas backup,17200,15,120
+row,ccashp w gas backup,15500,15,120
+apt,ccashp w gas backup,15050,15,120
+mob,ccashp w gas backup,15400,15,120
+sfd,ccashp w oil backup,20950,15,120
+row,ccashp w oil backup,19250,15,120
+apt,ccashp w oil backup,18800,15,120
+mob,ccashp w oil backup,19150,15,120
+sfd,ccashp w propane backup,17450,15,120
+row,ccashp w propane backup,15750,15,120
+apt,ccashp w propane backup,15300,15,120
+mob,ccashp w propane backup,15650,15,120
+sfd,ccashp w wood backup,17450,15,120
+row,ccashp w wood backup,15750,15,120
+apt,ccashp w wood backup,15300,15,120
+mob,ccashp w wood backup,15650,15,120
+sfd,gshp,36100,25,120
+row,gshp,34550,25,120
+apt,gshp,30300,25,120
+mob,gshp,31950,25,120

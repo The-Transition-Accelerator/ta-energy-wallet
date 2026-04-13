@@ -1,0 +1,8 @@
+vehicle_1_type,vehicle_1_category,population_share
+car,ICE,0.978
+car,EV,0.022
+SUV,ICE,0.975
+SUV,EV,0.025
+truck,ICE,0.997
+truck,EV,0.003
+none,none,1.000

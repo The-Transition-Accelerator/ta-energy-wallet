@@ -1,0 +1,54 @@
+title: "Vehicle Purchase & Maintenance Costs"
+question: "What do vehicles cost to buy and maintain?"
+topic: vehicles
+description: >
+  Vehicle purchase costs by type (car, SUV, truck), powertrain (ICE, EV), and
+  year. Representative vehicles were selected from the most popular models sold
+  in Canada in 2024, choosing the most affordable option within each class.
+  Costs are based on MSRP plus Ontario-specific fees and levies (~$2,900 on
+  average) and 13% HST. ICE costs are held constant across years. BEV future
+  costs (2030, 2035) are estimated relative to ICE costs using federal ZEV
+  regulatory analysis projections. By 2035, electric cars are projected to be
+  4% cheaper than ICE cars, while BEV trucks are expected to be 1.5% more
+  expensive. Vehicle assumed life is 12 years.
+source:
+  name: "TA Energy Wallet Analysis — Ontario Utility"
+  detail: >
+    Vehicle MSRP from manufacturer websites for 2025 model year. Ontario-specific
+    fees (AC excise tax, dealer administration fee, tire levy, PPSA, delivery and
+    destination charges) sourced from local dealerships. BEV cost projections from
+    Canada Gazette, Part II, Vol. 157, No. 26, December 20, 2023, Government of
+    Canada (page 4023).
+notes:
+  - "No real change in ICE vehicle prices is assumed between 2025 and 2035."
+  - "Ontario-specific fees include AC excise tax, dealer administration fee, tire levy, PPSA (Personal Property Security Registration), and delivery and destination charges."
+  - "The 'none' vehicle type uses zero cost and assumed_life=1 to avoid division-by-zero in PMT annualization."
+keys: [year, vehicle_type, vehicle_category]
+columns:
+  year:
+    description: "Projection year"
+    type: categorical
+    values: [2025, 2030, 2035]
+  vehicle_type:
+    description: "Vehicle type"
+    type: categorical
+    values: [none, car, SUV, truck]
+  vehicle_category:
+    description: "Powertrain category"
+    type: categorical
+    values: [none, ICE, EV]
+  vehicle_purchase_cost:
+    description: "Total purchase cost including fees and taxes"
+    type: numeric
+    unit: "$"
+    range: [0, 72000]
+  vehicle_assumed_life:
+    description: "Expected vehicle lifespan"
+    type: numeric
+    unit: "years"
+    range: [1, 12]
+  vehicle_maintenance_cost_per_km:
+    description: "Per-kilometre maintenance cost"
+    type: numeric
+    unit: "$/km"
+    range: [0, 0.09]

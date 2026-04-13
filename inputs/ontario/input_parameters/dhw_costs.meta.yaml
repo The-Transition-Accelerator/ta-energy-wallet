@@ -1,0 +1,33 @@
+title: "DHW Equipment Costs"
+question: "What does hot water equipment cost?"
+topic: hot_water
+description: >
+  Equipment purchase costs, expected useful life, and annual maintenance costs by
+  DHW system type. All systems assume a standard residential storage tank.
+source:
+  name: "TA Energy Wallet Analysis — Ontario Utility"
+  detail: "Baseline and upgrade DHW equipment cost tables from the Ontario Savings Model."
+notes:
+  - "All systems have 15-year EUL per TA Ontario utility analysis."
+  - "HPWH has lower maintenance ($125) than storage tank systems ($150-$200) despite higher equipment cost."
+keys: [dhw_system]
+columns:
+  dhw_system:
+    description: "Domestic hot water system type"
+    type: categorical
+    values: [HPWH, electric resistance, gas, oil, propane, wood]
+  dhw_equipment_cost:
+    description: "Installed equipment cost"
+    type: numeric
+    unit: "$"
+    range: [1250, 4500]
+  dhw_assumed_life:
+    description: "Expected useful life"
+    type: numeric
+    unit: "years"
+    range: [15, 15]
+  dhw_maintenance_cost_annual:
+    description: "Annual maintenance cost"
+    type: numeric
+    unit: "$/year"
+    range: [125, 200]

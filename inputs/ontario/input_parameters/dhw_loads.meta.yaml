@@ -1,0 +1,22 @@
+title: "Annual DHW Loads"
+question: "How much hot water energy is needed?"
+topic: hot_water
+description: >
+  Annual domestic hot water energy requirements by dwelling type, reflecting
+  differences in average occupancy and dwelling size.
+source:
+  name: "CEUD – Residential Sector – Ontario"
+  detail: "Tables 35, 37, and 39."
+notes:
+  - "Loads are not year-varying; the same values apply across all projection years."
+keys: [dwelling_type]
+columns:
+  dwelling_type:
+    description: "Dwelling type category"
+    type: categorical
+    values: [sfd, row, apt, mob]
+  dhw_load_annual:
+    description: "Total annual domestic hot water energy demand"
+    type: numeric
+    unit: "GJ/year"
+    range: [13, 18]

@@ -1,0 +1,9 @@
+dwelling_type,has_home_charging,population_share
+sfd,yes,0.85
+sfd,no,0.15
+row,yes,0.02
+row,no,0.98
+mob,yes,0.85
+mob,no,0.15
+apt,yes,0.02
+apt,no,0.98

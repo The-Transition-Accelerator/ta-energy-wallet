@@ -1,0 +1,16 @@
+vehicle_type,vehicle_category,climate_zone,vehicle_efficiency_gas,vehicle_efficiency_electric,ev_efficiency_factor,ev_pct_charged_home,ev_pct_charged_level2,ev_pct_charged_fast
+car,ICE,cold,0.0025,0,1.0,0,0,0
+car,ICE,moderate,0.0024,0,1.0,0,0,0
+car,ICE,warm,0.0023,0,1.0,0,0,0
+car,EV,cold,0,0.18,0.85,0.70,0.20,0.10
+car,EV,moderate,0,0.18,0.95,0.75,0.15,0.10
+car,EV,warm,0,0.18,1.0,0.80,0.15,0.05
+truck,ICE,cold,0.0030,0,1.0,0,0,0
+truck,ICE,moderate,0.0028,0,1.0,0,0,0
+truck,ICE,warm,0.0027,0,1.0,0,0,0
+truck,EV,cold,0,0.25,0.85,0.70,0.20,0.10
+truck,EV,moderate,0,0.25,0.95,0.75,0.15,0.10
+truck,EV,warm,0,0.25,1.0,0.80,0.15,0.05
+none,none,cold,0,0,1.0,0,0,0
+none,none,moderate,0,0,1.0,0,0,0
+none,none,warm,0,0,1.0,0,0,0

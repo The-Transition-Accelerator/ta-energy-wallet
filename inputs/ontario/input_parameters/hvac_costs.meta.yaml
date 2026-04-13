@@ -1,0 +1,70 @@
+title: "HVAC Equipment Costs"
+question: "What does HVAC equipment cost?"
+topic: space_heating_cooling
+description: >
+  Installed equipment costs, expected useful life, and annual maintenance costs
+  for HVAC systems by dwelling type. Costs are averaged across climate zones and
+  conditioning loads (envelope tiers) from the source data. For combined systems
+  (heat pump + backup furnace), costs are derived using component addition:
+  HP_unit_cost + backup_furnace_cost, validated against known bundled prices.
+source:
+  name: "TA Energy Wallet Analysis — Ontario Utility"
+  detail: >
+    OSM (Ontario Savings Model) equipment cost outputs, 2025 no-rebate values.
+    EULs from Table 15 (furnace operating efficiency and EUL) and Table 16
+    (heat pump sCOP and EUL).
+notes:
+  - "Condensing and non-condensing gas furnace costs are identical in this version; the source data does not distinguish them. Flag for future update."
+  - "Costs vary by dwelling type (sfd generally higher due to larger system sizing). Source data also varies by conditioning load and climate zone, but these dimensions are averaged out here."
+  - "HP with oil/propane/wood backup costs are derived via component addition: (HP w electric backup) - (baseboard w/o AC) + (fuel furnace w/o AC). This method is validated by exactly reproducing known HP w gas backup costs."
+  - "Electric baseboard (wo AC) has 30-year EUL per Table 15. With AC variant uses 15-year EUL reflecting AC unit replacement cycle."
+  - "GSHP has 25-year EUL per Table 16; all other systems use 15 years."
+  - "Maintenance costs vary by system type: $0 for baseboard w/o AC, $120 for AC-only or heat pump systems, $180 for furnace w/o AC, $300 for furnace w AC, $430-$550 for propane systems."
+keys: [dwelling_type, hvac_system]
+columns:
+  dwelling_type:
+    description: "Dwelling type category"
+    type: categorical
+    values: [sfd, row, apt, mob]
+  hvac_system:
+    description: "HVAC system configuration name"
+    type: categorical
+    values:
+      - "ashp w electric backup"
+      - "ashp w gas backup"
+      - "ashp w oil backup"
+      - "ashp w propane backup"
+      - "ashp w wood backup"
+      - "ccashp w electric backup"
+      - "ccashp w gas backup"
+      - "ccashp w oil backup"
+      - "ccashp w propane backup"
+      - "ccashp w wood backup"
+      - "condensing gas w AC"
+      - "condensing gas wo AC"
+      - "electric resistance w AC"
+      - "electric resistance wo AC"
+      - "gshp"
+      - "non-condensing gas w AC"
+      - "non-condensing gas wo AC"
+      - "oil w AC"
+      - "oil wo AC"
+      - "propane w AC"
+      - "propane wo AC"
+      - "wood w AC"
+      - "wood wo AC"
+  hvac_equipment_cost:
+    description: "Installed equipment cost (no rebate)"
+    type: numeric
+    unit: "$"
+    range: [2800, 36100]
+  hvac_assumed_life:
+    description: "Expected useful life"
+    type: numeric
+    unit: "years"
+    range: [15, 30]
+  hvac_maintenance_cost_annual:
+    description: "Annual maintenance cost"
+    type: numeric
+    unit: "$/year"
+    range: [0, 550]

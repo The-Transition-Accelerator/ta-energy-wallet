@@ -1,0 +1,51 @@
+title: "Residential Energy Rates"
+question: "What are the home energy prices?"
+topic: energy_prices
+description: >
+  Average residential energy rates for Ontario in 2025 C$/GJ. Electricity,
+  natural gas, oil, and gasoline rates are from CER Canada's Energy Future 2026
+  and represent average rates that include fixed charges, so fixed charge columns
+  are set to zero to avoid double-counting. Propane and wood rates are from the
+  TA Energy Wallet Analysis — Ontario Utility.
+source:
+  name: "Canada Energy Regulator — Canada's Energy Future 2026"
+  detail: "End-Use Prices, Current Measures scenario, Residential sector, Ontario. Propane from NRCan; wood from Ontario-based firewood retail (TA Ontario utility analysis)."
+notes:
+  - "All rates are in $/GJ. The model multiplies GJ loads by these rates directly."
+  - "Electricity, natural gas, and oil rates are average rates inclusive of fixed charges. Fixed charge columns are set to 0 to avoid double-counting."
+  - "Propane and wood rates are unchanged from the TA Ontario utility analysis (no CER source available)."
+  - "All dollar values are in 2025 constant Canadian dollars."
+keys: [year]
+columns:
+  year:
+    description: "Projection year"
+    type: categorical
+    values: [2025, 2030, 2035]
+  cost_electricity_home:
+    description: "Average residential electricity rate (includes fixed charges)"
+    type: numeric
+    unit: "$/GJ"
+  electricity_fixed_charge_monthly:
+    description: "Monthly fixed electricity distribution charge (set to 0; included in average rate)"
+    type: numeric
+    unit: "$/month"
+  cost_natural_gas_home:
+    description: "Average natural gas rate (includes fixed charges)"
+    type: numeric
+    unit: "$/GJ"
+  natural_gas_fixed_charge_monthly:
+    description: "Monthly fixed natural gas distribution charge (set to 0; included in average rate)"
+    type: numeric
+    unit: "$/month"
+  cost_oil_home:
+    description: "Average heating oil rate"
+    type: numeric
+    unit: "$/GJ"
+  cost_propane_home:
+    description: "Propane variable rate"
+    type: numeric
+    unit: "$/GJ"
+  cost_wood_home:
+    description: "Wood fuel variable rate"
+    type: numeric
+    unit: "$/GJ"

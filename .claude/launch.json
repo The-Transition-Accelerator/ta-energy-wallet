@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "dashboard",
+      "runtimeExecutable": ".venv/bin/python",
+      "runtimeArgs": ["dashboard_v2/app.py"],
+      "port": 8050
+    },
+    {
+      "name": "sketch",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "8765", "--directory", "/tmp"],
+      "port": 8765
+    }
+  ]
+}

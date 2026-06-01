@@ -130,7 +130,20 @@ def merge_alternative_configurations(
                 f"{name}: conditioning/join columns not available in merged baseline: {missing_join_cols}"
             )
 
-        merged = merged.merge(cur, on=join_cols, how="inner")
+        merged = merged.merge(cur, on=join_cols, how="left")
+
+        unmatched = merged[share_name].isna()
+        if unmatched.any():
+            new_scenario_cols = [c for c in spec.scenario_cols if c not in join_cols]
+            if new_scenario_cols:
+                raise AlternativeConfigJoinError(
+                    f"{name}: baseline archetypes have no matching entry but table "
+                    f"introduces scenario columns {new_scenario_cols}. "
+                    f"Add entries for all baseline values."
+                )
+            baseline_col = spec.new_alt_var_col.removeprefix("alt_")
+            merged.loc[unmatched, spec.new_alt_var_col] = merged.loc[unmatched, baseline_col].values
+            merged.loc[unmatched, share_name] = 1.0
 
         merged[expanded_weight_col] = merged[expanded_weight_col] * merged[share_name]
 

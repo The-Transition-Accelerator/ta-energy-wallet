@@ -264,6 +264,7 @@ def _validate_efficiency_vs_proportions(df: pd.DataFrame, *, source_name: str) -
     skip_patterns = (
         "heating_system_efficiency_",
         "dhw_system_efficiency_",
+        "cooling_system_efficiency",
         "vehicle_efficiency_gas",
         "vehicle_efficiency_electric",
     )

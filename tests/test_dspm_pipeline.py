@@ -36,9 +36,16 @@ class TestPipelineIntegration:
     def setup(self, tmp_path):
         """Set up a temp library copy with output dir."""
         import shutil
-        # Copy library to tmp so output goes there
+        # Copy library to tmp so output goes there. The converter writes its
+        # output inside the library dir, so the source library may carry
+        # energy_wallet_inputs/ from a previous run; exclude it so every test
+        # starts from a library with no output present.
         self.lib_path = tmp_path / "canada_reference"
-        shutil.copytree(DSPM_PATH, self.lib_path)
+        shutil.copytree(
+            DSPM_PATH,
+            self.lib_path,
+            ignore=shutil.ignore_patterns("energy_wallet_inputs"),
+        )
 
     def test_full_pipeline_runs(self):
         """Run the full converter and verify output structure."""
@@ -204,6 +211,13 @@ class TestPipelineIntegration:
     def test_dry_run_no_output(self):
         from energy_wallet.dspm_converter.pipeline import run_pipeline
 
+        def snapshot():
+            return {
+                (p.relative_to(self.lib_path), p.stat().st_size if p.is_file() else None)
+                for p in self.lib_path.rglob("*")
+            }
+
+        before = snapshot()
         result = run_pipeline(
             library_path=self.lib_path,
             province="ON",
@@ -211,6 +225,7 @@ class TestPipelineIntegration:
         )
         assert result is None
         assert not (self.lib_path / "energy_wallet_inputs").exists()
+        assert snapshot() == before
 
     def test_documentation_generated(self):
         from energy_wallet.dspm_converter.pipeline import run_pipeline
@@ -251,8 +266,13 @@ class TestMultiProvincePipeline:
     @pytest.fixture(autouse=True)
     def setup(self, tmp_path):
         import shutil
+        # Exclude prior converter output, as in TestPipelineIntegration.setup.
         self.lib_path = tmp_path / "canada_reference"
-        shutil.copytree(DSPM_PATH, self.lib_path)
+        shutil.copytree(
+            DSPM_PATH,
+            self.lib_path,
+            ignore=shutil.ignore_patterns("energy_wallet_inputs"),
+        )
 
     def test_multi_province_runs(self):
         from energy_wallet.dspm_converter.pipeline import run_pipeline

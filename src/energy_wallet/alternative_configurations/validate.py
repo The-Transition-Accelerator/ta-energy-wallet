@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import pandas as pd
+import polars as pl
 
 from .errors import AlternativeConfigTableError
 from .spec import AlternativeConfigTableSpec
@@ -10,8 +10,7 @@ from energy_wallet.validation.common import (
 )
 
 
-def validate_table(df: pd.DataFrame, spec: AlternativeConfigTableSpec, *, tolerance: float = 1e-3) -> None:
-    """Validate one Step 2 table against table-level rules."""
+def validate_table(df: pl.DataFrame, spec: AlternativeConfigTableSpec, *, tolerance: float = 1e-3) -> None:
     if spec.share_col not in df.columns:
         raise AlternativeConfigTableError(f"{spec.path.name}: missing share column '{spec.share_col}'")
 
@@ -22,8 +21,8 @@ def validate_table(df: pd.DataFrame, spec: AlternativeConfigTableSpec, *, tolera
         error_cls=AlternativeConfigTableError,
     )
 
-    if (shares < 0).any() or (shares > 1).any():
-        bad = df.loc[(shares < 0) | (shares > 1), [spec.share_col]].head(5)
+    if ((shares < 0) | (shares > 1)).any():
+        bad = df.filter((pl.col(spec.share_col) < 0) | (pl.col(spec.share_col) > 1)).head(5)
         raise AlternativeConfigTableError(
             f"{spec.path.name}: adoption shares must be between 0 and 1. Examples:\n{bad}"
         )
@@ -54,7 +53,7 @@ def validate_table(df: pd.DataFrame, spec: AlternativeConfigTableSpec, *, tolera
 
 
 def validate_expanded_output(
-    expanded: pd.DataFrame,
+    expanded: pl.DataFrame,
     *,
     baseline_id_col: str,
     baseline_weight_col: str,
@@ -63,7 +62,6 @@ def validate_expanded_output(
     year_col: str = "year",
     tolerance: float = 1e-3,
 ) -> None:
-    """Validate Step 2 merged output."""
     if expanded_weight_col not in expanded.columns:
         raise AlternativeConfigTableError(
             f"Expanded output missing weight column '{expanded_weight_col}'"
@@ -87,19 +85,19 @@ def validate_expanded_output(
         if c.endswith("__share"):
             ignore_cols.add(c)
     id_cols = [c for c in expanded.columns if c not in ignore_cols]
-    if expanded.duplicated(subset=id_cols).any():
+    if expanded.select(id_cols).is_duplicated().any():
         raise AlternativeConfigTableError("Expanded output has duplicate archetype/scenario combinations")
 
     conservation_group_cols = [baseline_id_col] + list(scenario_cols)
     if year_col in expanded.columns:
         conservation_group_cols.append(year_col)
 
-    grouped = expanded.groupby(conservation_group_cols, dropna=False, observed=True).agg(
-        actual=(expanded_weight_col, "sum"),
-        expected=(baseline_weight_col, "first"),
+    grouped = expanded.group_by(conservation_group_cols).agg(
+        pl.col(expanded_weight_col).sum().alias("actual"),
+        pl.col(baseline_weight_col).first().alias("expected"),
     )
-    bad = grouped[(grouped["actual"] - grouped["expected"]).abs() > tolerance]
-    if not bad.empty:
+    bad = grouped.filter((pl.col("actual") - pl.col("expected")).abs() > tolerance)
+    if len(bad) > 0:
         example = bad.head(10)
         raise AlternativeConfigTableError(
             "Expanded output violates baseline weight conservation. "

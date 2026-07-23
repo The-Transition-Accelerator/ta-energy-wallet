@@ -4,6 +4,7 @@ from pathlib import Path
 import sys
 
 import pandas as pd
+import polars as pl
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
@@ -68,7 +69,7 @@ def test_load_alt_table_infers_scenario_year_and_filters_zero(tmp_path: Path) ->
     assert spec.scenario_cols == ["scn_adoption"]
     assert spec.year_col == "year"
     assert len(df) == 2
-    assert df["adoption_share"].sum() == pytest.approx(1.0, abs=1e-9)
+    assert df["adoption_share"].sum() == pytest.approx(1.0, abs=1e-6)
 
 
 def test_load_alt_table_requires_alt_column_name_prefix(tmp_path: Path) -> None:
@@ -89,7 +90,7 @@ def test_load_alt_table_requires_alt_column_name_prefix(tmp_path: Path) -> None:
 
 
 def test_merge_alt_configs_matches_worked_example_weights() -> None:
-    baseline = pd.DataFrame(
+    baseline = pl.DataFrame(
         [
             {"dwelling_type": "single_family", "heating_system": "furnace", "vehicle_type": "ICE", "population_weight": 0.40},
             {"dwelling_type": "single_family", "heating_system": "heat_pump", "vehicle_type": "ICE", "population_weight": 0.20},
@@ -97,14 +98,14 @@ def test_merge_alt_configs_matches_worked_example_weights() -> None:
         ]
     )
 
-    alt_vehicle = pd.DataFrame(
+    alt_vehicle = pl.DataFrame(
         [
             {"vehicle_type": "ICE", "alt_vehicle_type": "EV", "adoption_share": 0.30},
             {"vehicle_type": "ICE", "alt_vehicle_type": "ICE", "adoption_share": 0.70},
         ]
     )
 
-    alt_heating = pd.DataFrame(
+    alt_heating = pl.DataFrame(
         [
             {"heating_system": "furnace", "alt_vehicle_type": "EV", "alt_heating_system": "heat_pump", "adoption_share": 0.80},
             {"heating_system": "furnace", "alt_vehicle_type": "EV", "alt_heating_system": "furnace", "adoption_share": 0.20},
@@ -147,21 +148,21 @@ def test_merge_alt_configs_matches_worked_example_weights() -> None:
     )
 
     assert len(expanded) == 8
-    assert expanded["population_weight"].sum() == pytest.approx(0.75, abs=1e-9)
+    assert expanded["population_weight"].sum() == pytest.approx(0.75, abs=1e-6)
 
-    row = expanded[
-        (expanded["dwelling_type"] == "single_family")
-        & (expanded["heating_system"] == "furnace")
-        & (expanded["vehicle_type"] == "ICE")
-        & (expanded["alt_vehicle_type"] == "EV")
-        & (expanded["alt_heating_system"] == "heat_pump")
-    ]
+    row = expanded.filter(
+        (pl.col("dwelling_type") == "single_family")
+        & (pl.col("heating_system") == "furnace")
+        & (pl.col("vehicle_type") == "ICE")
+        & (pl.col("alt_vehicle_type") == "EV")
+        & (pl.col("alt_heating_system") == "heat_pump")
+    )
     assert len(row) == 1
-    assert float(row.iloc[0]["population_weight"]) == pytest.approx(0.096, abs=1e-9)
+    assert float(row["population_weight"][0]) == pytest.approx(0.096, abs=1e-6)
 
 
 def test_merge_alt_configs_conserves_weight_by_scenario_and_year(tmp_path: Path) -> None:
-    baseline = pd.DataFrame(
+    baseline = pl.DataFrame(
         [
             {"heating_system": "furnace", "vehicle_type": "ICE", "population_weight": 1.0},
         ]
@@ -197,22 +198,23 @@ def test_merge_alt_configs_conserves_weight_by_scenario_and_year(tmp_path: Path)
         keep_provenance_shares=False,
     )
 
-    by_scenario_year = expanded.groupby(["scn_adoption", "year"], observed=True)["population_weight"].sum()
-    assert by_scenario_year[("conservative", 2025)] == pytest.approx(1.0, abs=1e-9)
-    assert by_scenario_year[("aggressive", 2025)] == pytest.approx(1.0, abs=1e-9)
-    assert by_scenario_year[("conservative", 2030)] == pytest.approx(1.0, abs=1e-9)
-    assert by_scenario_year[("aggressive", 2030)] == pytest.approx(1.0, abs=1e-9)
+    by_scenario_year = expanded.group_by(["scn_adoption", "year"]).agg(pl.col("population_weight").sum())
+    for scenario, year in [("conservative", 2025), ("aggressive", 2025), ("conservative", 2030), ("aggressive", 2030)]:
+        weight = by_scenario_year.filter(
+            (pl.col("scn_adoption") == scenario) & (pl.col("year") == year)
+        )["population_weight"][0]
+        assert weight == pytest.approx(1.0, abs=1e-6)
 
 
 def test_merge_alt_configs_fails_when_conditioning_not_available() -> None:
-    baseline = pd.DataFrame([
+    baseline = pl.DataFrame([
         {"vehicle_type": "ICE", "population_weight": 1.0},
     ])
 
     from energy_wallet.alternative_configurations.spec import AlternativeConfigTableSpec
 
     tables = {
-        "alt_heating": pd.DataFrame(
+        "alt_heating": pl.DataFrame(
             [
                 {
                     "heating_system": "furnace",

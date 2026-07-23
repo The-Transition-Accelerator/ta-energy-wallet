@@ -1,6 +1,6 @@
 # Energy Wallet
 
-> **Alpha version (v0.1.0) — under active development.** This model and its data inputs are provided as-is for exploration and research purposes. We make no representation as to the accuracy of the model outputs or the completeness of the underlying data. Results should not be used as the sole basis for policy decisions without independent validation.
+> **Alpha version (v0.1.1) — under active development.** This model and its data inputs are provided as-is for exploration and research purposes. We make no representation as to the accuracy of the model outputs or the completeness of the underlying data. Results should not be used as the sole basis for policy decisions without independent validation.
 
 ## What is Energy Wallet?
 

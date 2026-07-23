@@ -1,7 +1,6 @@
 from __future__ import annotations
 
-import numpy as np
-import pandas as pd
+import polars as pl
 
 from .errors import InputParameterTableError
 from .required import REQUIRED_INPUT_PARAMETERS
@@ -13,12 +12,7 @@ from energy_wallet.validation.common import (
 )
 
 
-def validate_input_parameter_table(df: pd.DataFrame, spec: InputParameterTableSpec) -> None:
-    """Validate one input parameter table (Step 3 table-level rules).
-
-    For tech-type tables (no _base/_alt suffixes on value columns), proportion
-    and efficiency checks still apply to the raw column names.
-    """
+def validate_input_parameter_table(df: pl.DataFrame, spec: InputParameterTableSpec) -> None:
     require_columns_present(
         df,
         spec.join_cols + spec.input_value_cols,
@@ -36,7 +30,7 @@ def validate_input_parameter_table(df: pd.DataFrame, spec: InputParameterTableSp
             source_name=spec.path.name,
             error_cls=InputParameterTableError,
         )
-        if series.isna().any():
+        if series.is_null().any():
             raise InputParameterTableError(f"{spec.path.name}: input column '{col}' contains missing values")
         if col == "discount_rate":
             if (series <= 0).any():
@@ -58,7 +52,6 @@ def validate_input_parameter_table(df: pd.DataFrame, spec: InputParameterTableSp
 
     _validate_efficiency_vs_proportions(df, source_name=spec.path.name)
 
-    # Reject duplicate dimension keys in one table.
     if spec.join_cols:
         require_no_duplicates(
             df,
@@ -78,14 +71,6 @@ def validate_cross_table_parameter_registry(
     required_parameters: tuple[str, ...] = REQUIRED_INPUT_PARAMETERS,
     strict: bool = False,
 ) -> None:
-    """Validate duplicate/missing required parameters across all input tables.
-
-    When *strict* is False (default for Phase 3B), multi-lookup tables are
-    excluded from the missing-parameter check because their raw value columns
-    don't yet have the final _base/_alt/_slot names.  The primary coverage
-    validation happens at the final output level via
-    ``validate_final_model_input_table``.
-    """
     seen: dict[str, str] = {}
     duplicates: dict[str, list[str]] = {}
 
@@ -110,11 +95,10 @@ def validate_cross_table_parameter_registry(
 
 
 def validate_final_model_input_table(
-    model_input_df: pd.DataFrame,
+    model_input_df: pl.DataFrame,
     *,
     required_parameters: tuple[str, ...] = REQUIRED_INPUT_PARAMETERS,
 ) -> None:
-    """Validate final joined Step 3 output table."""
     missing_cols = [p for p in required_parameters if p not in model_input_df.columns]
     if missing_cols:
         raise InputParameterTableError(
@@ -122,10 +106,9 @@ def validate_final_model_input_table(
         )
 
     req_cols = list(required_parameters)
-    if model_input_df[req_cols].isna().any().any():
+    if model_input_df.select(req_cols).null_count().row(0) != tuple(0 for _ in req_cols):
         raise InputParameterTableError("Final model input table contains missing parameter values")
 
-    # Validate assumed_life >= 1 to avoid division by zero in annualization.
     life_cols = [c for c in model_input_df.columns if "assumed_life" in c]
     for col in life_cols:
         if (model_input_df[col] < 1).any():
@@ -146,7 +129,6 @@ def validate_final_model_input_table(
 
     _validate_efficiency_vs_proportions(model_input_df, source_name="final model input table")
 
-    # EV charging sums: per slot and suffix.
     for n in (1, 2):
         for suffix in ("base", "alt"):
             cols = [
@@ -155,125 +137,95 @@ def validate_final_model_input_table(
                 f"ev_{n}_pct_charged_fast_{suffix}",
             ]
             if all(c in model_input_df.columns for c in cols):
-                sums = model_input_df[cols].sum(axis=1)
-                active_mask = pd.Series([True] * len(model_input_df), index=model_input_df.index)
+                sums = pl.sum_horizontal([pl.col(c) for c in cols])
                 eff_col = f"vehicle_{n}_efficiency_electric_{suffix}"
                 if eff_col in model_input_df.columns:
-                    active_mask = model_input_df[eff_col] > 0
-                bad = active_mask & ((sums - 1.0).abs() > 1e-3)
-                if bad.any():
+                    bad_expr = (pl.col(eff_col) > 0) & ((sums - 1.0).abs() > 1e-3)
+                else:
+                    bad_expr = (sums - 1.0).abs() > 1e-3
+                if model_input_df.filter(bad_expr).height > 0:
                     raise InputParameterTableError(
                         f"Final model input table violates EV charging share sum=1 "
                         f"for slot {n}, '{suffix}'"
                     )
 
-    # Heating/DHW fuel proportion sums.
     systems = ("heating_system", "dhw_system")
     fuels = ("gas", "electric", "oil", "propane", "wood")
     for system in systems:
         for suffix in ("base", "alt"):
             cols = [f"{system}_proportion_{fuel}_{suffix}" for fuel in fuels]
             if all(c in model_input_df.columns for c in cols):
-                sums = model_input_df[cols].sum(axis=1)
-                bad = (sums - 1.0).abs() > 1e-3
-                if bad.any():
+                sums = pl.sum_horizontal([pl.col(c) for c in cols])
+                bad_expr = (sums - 1.0).abs() > 1e-3
+                if model_input_df.filter(bad_expr).height > 0:
                     raise InputParameterTableError(
                         f"Final model input table violates {system} fuel proportion sum=1 for '{suffix}'"
                     )
 
 
-def _validate_efficiency_vs_proportions(df: pd.DataFrame, *, source_name: str) -> None:
-    """Validate that efficiency > 0 whenever the corresponding fuel proportion > 0.
-
-    Handles both the old naming scheme (no slot numbers) and the new per-slot
-    naming scheme (vehicle_{N}_efficiency_...).
-    """
+def _validate_efficiency_vs_proportions(df: pl.DataFrame, *, source_name: str) -> None:
     fuels = ("gas", "electric", "oil", "propane", "wood")
     systems = ("heating_system", "dhw_system")
 
-    # System fuel efficiencies: enforce >0 only when corresponding fuel proportion >0.
     for system in systems:
         for suffix in ("base", "alt"):
             for fuel in fuels:
                 p_col = f"{system}_proportion_{fuel}_{suffix}"
                 e_col = f"{system}_efficiency_{fuel}_{suffix}"
                 if p_col in df.columns and e_col in df.columns:
-                    active = df[p_col] > 0
-                    bad = active & (df[e_col] <= 0)
-                    if bad.any():
+                    if df.filter((pl.col(p_col) > 0) & (pl.col(e_col) <= 0)).height > 0:
                         raise InputParameterTableError(
                             f"{source_name}: '{e_col}' must be > 0 whenever '{p_col}' > 0"
                         )
 
-    # Also check raw (unsuffixed) columns for table-level validation
     for system in systems:
         for fuel in fuels:
             p_col = f"{system}_proportion_{fuel}"
             e_col = f"{system}_efficiency_{fuel}"
             if p_col in df.columns and e_col in df.columns:
-                active = df[p_col] > 0
-                bad = active & (df[e_col] <= 0)
-                if bad.any():
+                if df.filter((pl.col(p_col) > 0) & (pl.col(e_col) <= 0)).height > 0:
                     raise InputParameterTableError(
                         f"{source_name}: '{e_col}' must be > 0 whenever '{p_col}' > 0"
                     )
 
-    # Vehicle fuel efficiencies: per-slot naming (vehicle_{N}_efficiency_...)
     for n in (1, 2):
         for suffix in ("base", "alt"):
             gas_col = f"vehicle_{n}_efficiency_gas_{suffix}"
             elec_col = f"vehicle_{n}_efficiency_electric_{suffix}"
             if gas_col in df.columns and elec_col in df.columns:
-                # Skip rows where both are zero ("none" vehicle type).
-                either_active = (df[gas_col] > 0) | (df[elec_col] > 0)
-                pairs = (
-                    (gas_col, elec_col),
-                    (elec_col, gas_col),
-                )
-                for primary, other in pairs:
-                    active = either_active & (df[other] == 0)
-                    bad = active & (df[primary] <= 0)
-                    if bad.any():
+                either_active = (pl.col(gas_col) > 0) | (pl.col(elec_col) > 0)
+                for primary, other in ((gas_col, elec_col), (elec_col, gas_col)):
+                    bad_expr = either_active & (pl.col(other) == 0) & (pl.col(primary) <= 0)
+                    if df.filter(bad_expr).height > 0:
                         raise InputParameterTableError(
                             f"{source_name}: '{primary}' must be > 0 for rows where "
                             f"it is the active vehicle fuel mode"
                         )
 
-    # Legacy vehicle naming (no slot number) for table-level validation
     for suffix in ("base", "alt", ""):
         suffix_str = f"_{suffix}" if suffix else ""
         gas_col = f"vehicle_efficiency_gas{suffix_str}"
         elec_col = f"vehicle_efficiency_electric{suffix_str}"
         if gas_col in df.columns and elec_col in df.columns:
-            # Skip rows where both are zero ("none" vehicle type).
-            either_active = (df[gas_col] > 0) | (df[elec_col] > 0)
-            pairs = (
-                (gas_col, elec_col),
-                (elec_col, gas_col),
-            )
-            for primary, other in pairs:
-                active = either_active & (df[other] == 0)
-                bad = active & (df[primary] <= 0)
-                if bad.any():
+            either_active = (pl.col(gas_col) > 0) | (pl.col(elec_col) > 0)
+            for primary, other in ((gas_col, elec_col), (elec_col, gas_col)):
+                bad_expr = either_active & (pl.col(other) == 0) & (pl.col(primary) <= 0)
+                if df.filter(bad_expr).height > 0:
                     raise InputParameterTableError(
                         f"{source_name}: '{primary}' must be > 0 for rows where "
                         f"it is the active vehicle fuel mode"
                     )
 
-    # Remaining efficiency columns that are not fuel-switched should be strictly positive.
-    skip_patterns = (
+    skip_patterns = [
         "heating_system_efficiency_",
         "dhw_system_efficiency_",
         "cooling_system_efficiency",
         "vehicle_efficiency_gas",
         "vehicle_efficiency_electric",
-    )
-    # Also skip per-slot vehicle efficiency patterns
+    ]
     for n in (1, 2):
-        skip_patterns = skip_patterns + (
-            f"vehicle_{n}_efficiency_gas",
-            f"vehicle_{n}_efficiency_electric",
-        )
+        skip_patterns.append(f"vehicle_{n}_efficiency_gas")
+        skip_patterns.append(f"vehicle_{n}_efficiency_electric")
 
     for col in [c for c in df.columns if "efficiency" in c]:
         if any(token in col for token in skip_patterns):

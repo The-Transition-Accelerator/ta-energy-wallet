@@ -3,7 +3,9 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Iterable, List, Optional, Tuple
 
-import pandas as pd
+import polars as pl
+
+from energy_wallet.dtypes import optimize_dtypes
 
 from .errors import AlternativeConfigTableError
 from .spec import AlternativeConfigTableSpec
@@ -17,7 +19,6 @@ def discover_alternative_configuration_files(
     include: Optional[Iterable[str]] = None,
     exclude: Optional[Iterable[str]] = None,
 ) -> List[Path]:
-    """Discover alternative configuration table files from a directory."""
     if not inputs_dir.exists():
         raise AlternativeConfigTableError(f"Inputs directory not found: {inputs_dir}")
 
@@ -65,15 +66,6 @@ def infer_spec_from_columns(
     share_col: str = "adoption_share",
     scenario_cols: Optional[List[str]] = None,
 ) -> AlternativeConfigTableSpec:
-    """Infer Step 2 column roles from ordered columns.
-
-    Expected order:
-      [conditioning cols] -> [new alt var] -> [scenario cols?] -> [year?] -> [adoption_share]
-
-    Important: scenario columns are ambiguous without metadata. This skeleton supports
-    explicit `scenario_cols` input. If omitted, all non-terminal columns before year/share
-    are treated as conditioning, and no scenario columns are inferred.
-    """
     if len(cols) < 3:
         raise AlternativeConfigTableError(
             f"{path.name}: expected at least [conditioning][new_alt_var][{share_col}]"
@@ -97,7 +89,6 @@ def infer_spec_from_columns(
         )
 
     if scenario_cols is None:
-        # Convention-based inference: scenario columns use the scn_* prefix.
         scenario_cols = [c for c in variable_region if c.startswith("scn_")]
 
     for c in scenario_cols:
@@ -118,7 +109,7 @@ def infer_spec_from_columns(
 
         new_alt_var_col = variable_region[new_alt_idx]
         conditioning_cols = variable_region[:new_alt_idx]
-        scenario_tail = variable_region[new_alt_idx + 1 :]
+        scenario_tail = variable_region[new_alt_idx + 1:]
         if set(scenario_tail) != set(scenario_cols) or len(scenario_tail) != len(scenario_cols):
             raise AlternativeConfigTableError(
                 f"{path.name}: scenario columns must come after new alt variable "
@@ -148,18 +139,15 @@ def load_alternative_configuration_table(
     share_col: str = "adoption_share",
     tolerance: float = 1e-3,
     scenario_cols: Optional[List[str]] = None,
-) -> Tuple[pd.DataFrame, AlternativeConfigTableSpec]:
-    """Load one alternative configuration table and run table-level validation."""
-    df = pd.read_csv(path)
-    spec = infer_spec_from_columns(path, list(df.columns), share_col=share_col, scenario_cols=scenario_cols)
+) -> Tuple[pl.DataFrame, AlternativeConfigTableSpec]:
+    df = optimize_dtypes(pl.read_csv(path))
+    spec = infer_spec_from_columns(path, df.columns, share_col=share_col, scenario_cols=scenario_cols)
 
-    # Normalize percentages to decimal shares if needed.
     max_value = df[spec.share_col].max()
-    if pd.notna(max_value) and max_value > 1:
-        df[spec.share_col] = df[spec.share_col] / 100.0
+    if max_value is not None and max_value > 1:
+        df = df.with_columns((pl.col(spec.share_col) / 100.0).alias(spec.share_col))
 
-    # Optimization: drop explicitly excluded combinations early.
-    df = df[df[spec.share_col] != 0].copy()
+    df = df.filter(pl.col(spec.share_col) != 0)
 
     validate_table(df, spec, tolerance=tolerance)
     return df, spec
@@ -174,15 +162,14 @@ def load_all_alternative_configuration_tables(
     include: Optional[Iterable[str]] = None,
     exclude: Optional[Iterable[str]] = None,
     scenario_cols_by_file: Optional[dict[str, List[str]]] = None,
-) -> Tuple[List[pd.DataFrame], List[AlternativeConfigTableSpec]]:
-    """Load and validate all alternative configuration CSVs in a directory."""
+) -> Tuple[List[pl.DataFrame], List[AlternativeConfigTableSpec]]:
     files = discover_alternative_configuration_files(
         inputs_dir,
         include=include,
         exclude=exclude,
     )
 
-    tables: List[pd.DataFrame] = []
+    tables: List[pl.DataFrame] = []
     specs: List[AlternativeConfigTableSpec] = []
 
     scenario_cols_by_file = scenario_cols_by_file or {}

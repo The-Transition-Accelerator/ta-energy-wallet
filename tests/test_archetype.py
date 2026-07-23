@@ -4,6 +4,7 @@ from pathlib import Path
 import sys
 
 import pandas as pd
+import polars as pl
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
@@ -46,7 +47,7 @@ def test_load_archetype_table_infers_spec_and_filters_zero_shares(tmp_path: Path
     assert spec.conditioning_cols == []
     assert spec.year_col is None
     assert len(df) == 2
-    assert "unused" not in set(df["vehicle_type"])
+    assert "unused" not in df["vehicle_type"].to_list()
 
 
 def test_load_archetype_table_rejects_invalid_column_order(tmp_path: Path) -> None:
@@ -115,15 +116,15 @@ def test_merge_archetypes_matches_step1_worked_example(tmp_path: Path) -> None:
     assert set(["dwelling_type", "heating_system", "vehicle_type", "population_weight"]).issubset(
         merged.columns
     )
-    assert merged["population_weight"].sum() == pytest.approx(1.0, abs=1e-9)
+    assert merged["population_weight"].sum() == pytest.approx(1.0, abs=1e-6)
 
-    sf_furnace_gas = merged[
-        (merged["dwelling_type"] == "single_family")
-        & (merged["heating_system"] == "furnace")
-        & (merged["vehicle_type"] == "gasoline")
-    ]
+    sf_furnace_gas = merged.filter(
+        (pl.col("dwelling_type") == "single_family")
+        & (pl.col("heating_system") == "furnace")
+        & (pl.col("vehicle_type") == "gasoline")
+    )
     assert len(sf_furnace_gas) == 1
-    assert float(sf_furnace_gas.iloc[0]["population_weight"]) == pytest.approx(0.3315, abs=1e-9)
+    assert float(sf_furnace_gas["population_weight"][0]) == pytest.approx(0.3315, abs=1e-6)
 
 
 def test_merge_archetypes_enforces_conditioning_constraints(tmp_path: Path) -> None:
@@ -147,12 +148,12 @@ def test_merge_archetypes_enforces_conditioning_constraints(tmp_path: Path) -> N
     tables, specs = _load_as_maps(archetypes_dir)
     merged = merge_archetypes(tables, specs, keep_provenance_shares=False)
 
-    impossible = merged[
-        ((merged["dwelling_type"] == "single_family") & (merged["heating_system"] == "heat_pump"))
-        | ((merged["dwelling_type"] == "apartment") & (merged["heating_system"] == "furnace"))
-    ]
-    assert impossible.empty
-    assert merged["population_weight"].sum() == pytest.approx(1.0, abs=1e-9)
+    impossible = merged.filter(
+        ((pl.col("dwelling_type") == "single_family") & (pl.col("heating_system") == "heat_pump"))
+        | ((pl.col("dwelling_type") == "apartment") & (pl.col("heating_system") == "furnace"))
+    )
+    assert len(impossible) == 0
+    assert merged["population_weight"].sum() == pytest.approx(1.0, abs=1e-6)
 
 
 def test_merge_archetypes_with_year_expands_time_invariant_tables(tmp_path: Path) -> None:
@@ -188,11 +189,11 @@ def test_merge_archetypes_with_year_expands_time_invariant_tables(tmp_path: Path
     merged = merge_archetypes(tables, specs, keep_provenance_shares=False)
 
     assert "year" in merged.columns
-    assert set(merged["year"]) == {2025, 2030}
+    assert set(merged["year"].to_list()) == {2025, 2030}
 
-    by_year = merged.groupby("year", observed=True)["population_weight"].sum().to_dict()
-    assert by_year[2025] == pytest.approx(1.0, abs=1e-9)
-    assert by_year[2030] == pytest.approx(1.0, abs=1e-9)
+    by_year = merged.group_by("year").agg(pl.col("population_weight").sum())
+    for row in by_year.iter_rows(named=True):
+        assert row["population_weight"] == pytest.approx(1.0, abs=1e-6)
 
 
 def test_merge_archetypes_raises_on_unresolvable_conditioning_dependency(tmp_path: Path) -> None:

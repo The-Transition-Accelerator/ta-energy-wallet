@@ -1,7 +1,0 @@
-dhw_system,dhw_equipment_cost,dhw_assumed_life,dhw_maintenance_cost_annual
-HPWH,7500.0,12.0,150
-electric resistance,4000.0,12.0,150
-gas,5000.0,12.0,150
-oil,6000.0,12.0,150
-propane,6000.0,12.0,150
-wood,6000.0,12.0,150

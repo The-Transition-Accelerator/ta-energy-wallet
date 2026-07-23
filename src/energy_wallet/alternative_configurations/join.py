@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Dict, List, Optional, Tuple
 
-import pandas as pd
+import polars as pl
 
 from .errors import AlternativeConfigJoinError
 from .spec import AlternativeConfigTableSpec
@@ -11,7 +11,7 @@ from .validate import validate_expanded_output
 
 def _toposort_tables(
     specs: Dict[str, AlternativeConfigTableSpec],
-    tables: Optional[Dict[str, pd.DataFrame]] = None,
+    tables: Optional[Dict[str, pl.DataFrame]] = None,
 ) -> List[str]:
     introduced_by: Dict[str, str] = {}
     for name, spec in specs.items():
@@ -59,8 +59,8 @@ def _toposort_tables(
 
 
 def merge_alternative_configurations(
-    baseline_archetypes: pd.DataFrame,
-    tables: Dict[str, pd.DataFrame],
+    baseline_archetypes: pl.DataFrame,
+    tables: Dict[str, pl.DataFrame],
     specs: Dict[str, AlternativeConfigTableSpec],
     *,
     baseline_weight_col: str = "population_weight",
@@ -68,8 +68,7 @@ def merge_alternative_configurations(
     keep_provenance_shares: bool = False,
     tolerance: float = 1e-3,
     validate: bool = True,
-) -> pd.DataFrame:
-    """Expand baseline archetypes with Step 2 alternative configuration tables."""
+) -> pl.DataFrame:
     if baseline_weight_col not in baseline_archetypes.columns:
         raise AlternativeConfigJoinError(
             f"Baseline archetypes missing weight column '{baseline_weight_col}'"
@@ -83,22 +82,23 @@ def merge_alternative_configurations(
 
     order = _toposort_tables(specs, tables=tables)
 
-    merged = baseline_archetypes.copy()
     baseline_id_col = "__baseline_row_id"
-    if baseline_id_col in merged.columns:
+    if baseline_id_col in baseline_archetypes.columns:
         raise AlternativeConfigJoinError(
             f"Reserved internal column already exists in baseline data: {baseline_id_col}"
         )
 
-    merged[baseline_id_col] = range(len(merged))
-    merged["__baseline_weight"] = merged[baseline_weight_col]
+    merged = baseline_archetypes.with_columns(
+        pl.lit(pl.Series(range(len(baseline_archetypes)))).alias(baseline_id_col),
+        pl.col(baseline_weight_col).alias("__baseline_weight"),
+    )
     if expanded_weight_col != baseline_weight_col:
-        merged[expanded_weight_col] = merged[baseline_weight_col]
+        merged = merged.with_columns(pl.col(baseline_weight_col).alias(expanded_weight_col))
 
     scenario_cols_all: List[str] = []
 
     for name in order:
-        cur = tables[name].copy()
+        cur = tables[name]
         spec = specs[name]
 
         share_col = spec.share_col
@@ -106,7 +106,7 @@ def merge_alternative_configurations(
             raise AlternativeConfigJoinError(f"{name}: missing share column '{share_col}'")
 
         share_name = f"{name}__share"
-        cur = cur.rename(columns={share_col: share_name})
+        cur = cur.rename({share_col: share_name})
 
         if spec.new_alt_var_col in merged.columns:
             raise AlternativeConfigJoinError(
@@ -130,10 +130,10 @@ def merge_alternative_configurations(
                 f"{name}: conditioning/join columns not available in merged baseline: {missing_join_cols}"
             )
 
-        merged = merged.merge(cur, on=join_cols, how="left")
+        merged = merged.join(cur, on=join_cols, how="left")
 
-        unmatched = merged[share_name].isna()
-        if unmatched.any():
+        has_unmatched = merged[share_name].is_null().any()
+        if has_unmatched:
             new_scenario_cols = [c for c in spec.scenario_cols if c not in join_cols]
             if new_scenario_cols:
                 raise AlternativeConfigJoinError(
@@ -142,14 +142,21 @@ def merge_alternative_configurations(
                     f"Add entries for all baseline values."
                 )
             baseline_col = spec.new_alt_var_col.removeprefix("alt_")
-            merged.loc[unmatched, spec.new_alt_var_col] = merged.loc[unmatched, baseline_col].values
-            merged.loc[unmatched, share_name] = 1.0
+            merged = merged.with_columns(
+                pl.when(pl.col(share_name).is_null())
+                .then(pl.col(baseline_col))
+                .otherwise(pl.col(spec.new_alt_var_col))
+                .alias(spec.new_alt_var_col),
+                pl.col(share_name).fill_null(1.0),
+            )
 
-        merged[expanded_weight_col] = merged[expanded_weight_col] * merged[share_name]
+        merged = merged.with_columns(
+            (pl.col(expanded_weight_col) * pl.col(share_name)).alias(expanded_weight_col)
+        )
 
     if not keep_provenance_shares:
         drop_cols = [c for c in merged.columns if c.endswith("__share")]
-        merged = merged.drop(columns=drop_cols)
+        merged = merged.drop(drop_cols)
 
     if validate:
         validate_expanded_output(

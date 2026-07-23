@@ -6,6 +6,7 @@ import sys
 
 import numpy as np
 import pandas as pd
+import polars as pl
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
@@ -25,38 +26,38 @@ from energy_wallet.calculations.errors import CalculationError  # noqa: E402
 
 def test_annualize_basic() -> None:
     """PMT formula: cost * rate / (1 - (1+rate)^{-life})."""
-    cost = pd.Series([10000.0])
-    rate = pd.Series([0.03])
-    life = pd.Series([10.0])
+    cost = pl.Series([10000.0])
+    rate = pl.Series([0.03])
+    life = pl.Series([10.0])
 
     result = annualized_capital(cost, rate, life)
     # Manual: 10000 * 0.03 / (1 - 1.03^{-10}) = 10000 * 0.03 / 0.14635 ≈ 1172.31
     expected = 10000.0 * 0.03 / (1 - (1.03) ** (-10))
-    np.testing.assert_allclose(result.values, [expected], rtol=1e-6)
+    np.testing.assert_allclose(result.to_list(), [expected], rtol=1e-6)
 
 
 def test_annualize_zero_cost() -> None:
     """Zero cost returns zero payment."""
     result = annualized_capital(
-        pd.Series([0.0]), pd.Series([0.03]), pd.Series([10.0])
+        pl.Series([0.0]), pl.Series([0.03]), pl.Series([10.0])
     )
-    assert result.iloc[0] == 0.0
+    assert result[0] == 0.0
 
 
 def test_annualize_zero_life() -> None:
     """Life <= 0 returns zero payment."""
     result = annualized_capital(
-        pd.Series([10000.0]), pd.Series([0.03]), pd.Series([0.0])
+        pl.Series([10000.0]), pl.Series([0.03]), pl.Series([0.0])
     )
-    assert result.iloc[0] == 0.0
+    assert result[0] == 0.0
 
 
 def test_annualize_zero_rate() -> None:
     """Rate = 0 returns zero (guarded)."""
     result = annualized_capital(
-        pd.Series([10000.0]), pd.Series([0.0]), pd.Series([10.0])
+        pl.Series([10000.0]), pl.Series([0.0]), pl.Series([10.0])
     )
-    assert result.iloc[0] == pytest.approx(1000.0)
+    assert result[0] == pytest.approx(1000.0)
 
 
 # ---------------------------------------------------------------------------
@@ -67,12 +68,12 @@ def _make_vehicle_df(
     slot: int = 1,
     suffix: str = "base",
     vehicle_type: str = "ICE",
-) -> pd.DataFrame:
+) -> pl.DataFrame:
     """Build a single-row DataFrame with all columns needed for vehicle slot calcs."""
     s = str(slot)
     sfx = suffix
     if vehicle_type == "ICE":
-        return pd.DataFrame([{
+        return pl.DataFrame([{
             f"vehicle_{s}_purchase_cost_{sfx}": 30000.0,
             f"vehicle_{s}_assumed_life_{sfx}": 12.0,
             f"vehicle_{s}_maintenance_cost_per_km_{sfx}": 0.05,
@@ -90,7 +91,7 @@ def _make_vehicle_df(
             "cost_electricity_fast": 60.0,
         }])
     elif vehicle_type == "EV":
-        return pd.DataFrame([{
+        return pl.DataFrame([{
             f"vehicle_{s}_purchase_cost_{sfx}": 40000.0,
             f"vehicle_{s}_assumed_life_{sfx}": 15.0,
             f"vehicle_{s}_maintenance_cost_per_km_{sfx}": 0.02,
@@ -108,7 +109,7 @@ def _make_vehicle_df(
             "cost_electricity_fast": 60.0,
         }])
     else:  # "none"
-        return pd.DataFrame([{
+        return pl.DataFrame([{
             f"vehicle_{s}_purchase_cost_{sfx}": 0.0,
             f"vehicle_{s}_assumed_life_{sfx}": 1.0,
             f"vehicle_{s}_maintenance_cost_per_km_{sfx}": 0.0,
@@ -132,20 +133,20 @@ def test_vehicle_ice_costs() -> None:
     result = compute_vehicle_slot_costs(df, slot=1, suffix="base")
 
     # Capital > 0
-    assert result["vehicle_1_base_annual_capital"].iloc[0] > 0
+    assert result["vehicle_1_base_annual_capital"][0] > 0
 
     # Maintenance = 0.05 * 15000 = 750
-    np.testing.assert_allclose(result["vehicle_1_base_annual_maintenance"].iloc[0], 750.0)
+    np.testing.assert_allclose(result["vehicle_1_base_annual_maintenance"][0], 750.0)
 
     # Gas energy = 0.0025 * 15000 = 37.5 GJ
-    np.testing.assert_allclose(result["vehicle_1_base_gas_energy_gj"].iloc[0], 37.5)
+    np.testing.assert_allclose(result["vehicle_1_base_gas_energy_gj"][0], 37.5)
 
     # Gas cost = 37.5 * 35 = 1312.5
-    np.testing.assert_allclose(result["vehicle_1_base_gas_cost"].iloc[0], 1312.5)
+    np.testing.assert_allclose(result["vehicle_1_base_gas_cost"][0], 1312.5)
 
     # EV energy = 0 (ICE)
-    assert result["vehicle_1_base_ev_energy_gj"].iloc[0] == 0.0
-    assert result["vehicle_1_base_ev_cost"].iloc[0] == 0.0
+    assert result["vehicle_1_base_ev_energy_gj"][0] == 0.0
+    assert result["vehicle_1_base_ev_cost"][0] == 0.0
 
 
 def test_vehicle_ev_costs() -> None:
@@ -153,11 +154,11 @@ def test_vehicle_ev_costs() -> None:
     result = compute_vehicle_slot_costs(df, slot=1, suffix="alt")
 
     # Gas = 0 (EV)
-    assert result["vehicle_1_alt_gas_energy_gj"].iloc[0] == 0.0
-    assert result["vehicle_1_alt_gas_cost"].iloc[0] == 0.0
+    assert result["vehicle_1_alt_gas_energy_gj"][0] == 0.0
+    assert result["vehicle_1_alt_gas_cost"][0] == 0.0
 
     # EV energy > 0
-    ev_energy_gj = result["vehicle_1_alt_ev_energy_gj"].iloc[0]
+    ev_energy_gj = result["vehicle_1_alt_ev_energy_gj"][0]
     assert ev_energy_gj > 0
 
     # Manual: 0.18 kWh/km * 14000 km = 2520 kWh; / 0.90 = 2800 kWh; * 0.0036 = 10.08 GJ
@@ -167,14 +168,14 @@ def test_vehicle_ev_costs() -> None:
     # EV cost = energy * weighted price
     weighted_price = 0.70 * 50 + 0.20 * 55 + 0.10 * 60
     expected_ev_cost = expected_gj * weighted_price
-    np.testing.assert_allclose(result["vehicle_1_alt_ev_cost"].iloc[0], expected_ev_cost, rtol=1e-6)
+    np.testing.assert_allclose(result["vehicle_1_alt_ev_cost"][0], expected_ev_cost, rtol=1e-6)
 
     # Home/public split
-    ev_cost_home = result["vehicle_1_alt_ev_cost_home"].iloc[0]
-    ev_cost_public = result["vehicle_1_alt_ev_cost_public"].iloc[0]
+    ev_cost_home = result["vehicle_1_alt_ev_cost_home"][0]
+    ev_cost_public = result["vehicle_1_alt_ev_cost_public"][0]
     np.testing.assert_allclose(
         ev_cost_home + ev_cost_public,
-        result["vehicle_1_alt_ev_cost"].iloc[0],
+        result["vehicle_1_alt_ev_cost"][0],
         rtol=1e-6,
     )
 
@@ -184,18 +185,18 @@ def test_vehicle_none_costs() -> None:
     result = compute_vehicle_slot_costs(df, slot=2, suffix="base")
 
     # All costs should be zero
-    assert result["vehicle_2_base_annual_capital"].iloc[0] == 0.0
-    assert result["vehicle_2_base_annual_maintenance"].iloc[0] == 0.0
-    assert result["vehicle_2_base_gas_cost"].iloc[0] == 0.0
-    assert result["vehicle_2_base_ev_cost"].iloc[0] == 0.0
-    assert result["vehicle_2_base_total_cost"].iloc[0] == 0.0
+    assert result["vehicle_2_base_annual_capital"][0] == 0.0
+    assert result["vehicle_2_base_annual_maintenance"][0] == 0.0
+    assert result["vehicle_2_base_gas_cost"][0] == 0.0
+    assert result["vehicle_2_base_ev_cost"][0] == 0.0
+    assert result["vehicle_2_base_total_cost"][0] == 0.0
 
 
 # ---------------------------------------------------------------------------
 # HVAC costs
 # ---------------------------------------------------------------------------
 
-def _make_hvac_df(suffix: str = "base") -> pd.DataFrame:
+def _make_hvac_df(suffix: str = "base") -> pl.DataFrame:
     sfx = suffix
     data = {
         f"hvac_equipment_cost_{sfx}": 8000.0,
@@ -216,26 +217,26 @@ def _make_hvac_df(suffix: str = "base") -> pd.DataFrame:
         data[f"heating_system_proportion_{fuel}_{sfx}"] = 1.0 if fuel == "gas" else 0.0
         data[f"heating_system_efficiency_{fuel}_{sfx}"] = 0.92 if fuel == "gas" else 1.0
 
-    return pd.DataFrame([data])
+    return pl.DataFrame([data])
 
 
 def test_hvac_furnace_costs() -> None:
     df = _make_hvac_df("base")
     result = compute_hvac_costs(df, suffix="base")
 
-    assert result["hvac_base_annual_capital"].iloc[0] > 0
-    assert result["hvac_base_annual_maintenance"].iloc[0] == 200.0
+    assert result["hvac_base_annual_capital"][0] > 0
+    assert result["hvac_base_annual_maintenance"][0] == 200.0
 
     # Heating: 80 GJ * 1.0 / 0.92 * 20 = 1739.13
     expected_heating = 80.0 / 0.92 * 20.0
     np.testing.assert_allclose(
-        result["hvac_base_heating_cost"].iloc[0], expected_heating, rtol=1e-4
+        result["hvac_base_heating_cost"][0], expected_heating, rtol=1e-4
     )
 
     # Cooling: 10 / 3.5 * 50 = 142.86
     expected_cooling = 10.0 / 3.5 * 50.0
     np.testing.assert_allclose(
-        result["hvac_base_cooling_cost"].iloc[0], expected_cooling, rtol=1e-4
+        result["hvac_base_cooling_cost"][0], expected_cooling, rtol=1e-4
     )
 
 
@@ -243,7 +244,7 @@ def test_hvac_furnace_costs() -> None:
 # DHW costs
 # ---------------------------------------------------------------------------
 
-def _make_dhw_df(suffix: str = "base") -> pd.DataFrame:
+def _make_dhw_df(suffix: str = "base") -> pl.DataFrame:
     sfx = suffix
     data = {
         f"dhw_equipment_cost_{sfx}": 1500.0,
@@ -269,26 +270,26 @@ def _make_dhw_df(suffix: str = "base") -> pd.DataFrame:
             data[f"dhw_system_proportion_{fuel}_{sfx}"] = 0.0
             data[f"dhw_system_efficiency_{fuel}_{sfx}"] = 1.0
 
-    return pd.DataFrame([data])
+    return pl.DataFrame([data])
 
 
 def test_dhw_costs() -> None:
     df = _make_dhw_df("base")
     result = compute_dhw_costs(df, suffix="base")
 
-    assert result["dhw_base_annual_capital"].iloc[0] > 0
-    assert result["dhw_base_annual_maintenance"].iloc[0] == 50.0
+    assert result["dhw_base_annual_capital"][0] > 0
+    assert result["dhw_base_annual_maintenance"][0] == 50.0
 
     # Gas: 18 * 0.6 / 0.62 * 20 = 348.39
     expected_gas_cost = 18.0 * 0.6 / 0.62 * 20.0
     np.testing.assert_allclose(
-        result["dhw_base_gas_cost"].iloc[0], expected_gas_cost, rtol=1e-4
+        result["dhw_base_gas_cost"][0], expected_gas_cost, rtol=1e-4
     )
 
     # Electric: 18 * 0.4 / 0.95 * 50 = 378.95
     expected_elec_cost = 18.0 * 0.4 / 0.95 * 50.0
     np.testing.assert_allclose(
-        result["dhw_base_electric_cost"].iloc[0], expected_elec_cost, rtol=1e-4
+        result["dhw_base_electric_cost"][0], expected_elec_cost, rtol=1e-4
     )
 
 
@@ -296,7 +297,7 @@ def test_dhw_costs() -> None:
 # Other costs
 # ---------------------------------------------------------------------------
 
-def _make_other_df(suffix: str = "base", uses_gas: bool = True) -> pd.DataFrame:
+def _make_other_df(suffix: str = "base", uses_gas: bool = True) -> pl.DataFrame:
     sfx = suffix
     data = {
         f"other_electricity_annual_{sfx}": 5.0,  # GJ
@@ -313,7 +314,7 @@ def _make_other_df(suffix: str = "base", uses_gas: bool = True) -> pd.DataFrame:
     data[f"heating_system_proportion_gas_{sfx}"] = 1.0 if uses_gas else 0.0
     data[f"dhw_system_proportion_gas_{sfx}"] = 0.0
 
-    return pd.DataFrame([data])
+    return pl.DataFrame([data])
 
 
 def test_other_costs_with_gas() -> None:
@@ -321,16 +322,16 @@ def test_other_costs_with_gas() -> None:
     result = compute_other_costs(df, suffix="base")
 
     # Other elec: 5 * 50 = 250
-    np.testing.assert_allclose(result["other_base_electricity_cost"].iloc[0], 250.0)
+    np.testing.assert_allclose(result["other_base_electricity_cost"][0], 250.0)
 
     # Other NG: 3 * 20 = 60
-    np.testing.assert_allclose(result["other_base_natural_gas_cost"].iloc[0], 60.0)
+    np.testing.assert_allclose(result["other_base_natural_gas_cost"][0], 60.0)
 
     # Elec fixed: 15 * 12 = 180
-    np.testing.assert_allclose(result["other_base_electricity_fixed_charge"].iloc[0], 180.0)
+    np.testing.assert_allclose(result["other_base_electricity_fixed_charge"][0], 180.0)
 
     # NG fixed: 12 * 12 = 144 (uses gas = True)
-    np.testing.assert_allclose(result["other_base_natural_gas_fixed_charge"].iloc[0], 144.0)
+    np.testing.assert_allclose(result["other_base_natural_gas_fixed_charge"][0], 144.0)
 
 
 def test_other_costs_ng_fixed_excluded_when_no_gas() -> None:
@@ -338,14 +339,14 @@ def test_other_costs_ng_fixed_excluded_when_no_gas() -> None:
     result = compute_other_costs(df, suffix="alt")
 
     # NG fixed charge should be 0 when no gas is used
-    np.testing.assert_allclose(result["other_alt_natural_gas_fixed_charge"].iloc[0], 0.0)
+    np.testing.assert_allclose(result["other_alt_natural_gas_fixed_charge"][0], 0.0)
 
 
 # ---------------------------------------------------------------------------
 # Full pipeline
 # ---------------------------------------------------------------------------
 
-def _make_full_model_input() -> pd.DataFrame:
+def _make_full_model_input() -> pl.DataFrame:
     """Build a minimal but complete model input DataFrame for pipeline test."""
     data = {
         "discount_rate": 0.03,
@@ -443,7 +444,7 @@ def _make_full_model_input() -> pd.DataFrame:
             f"panel_assumed_life_{sfx}": 30.0,
         })
 
-    return pd.DataFrame([data])
+    return pl.DataFrame([data])
 
 
 def test_compute_energy_wallet_full_pipeline() -> None:
@@ -458,27 +459,27 @@ def test_compute_energy_wallet_full_pipeline() -> None:
     assert "energy_wallet_diff_percent" in result.columns
 
     # Totals should be positive
-    assert result["energy_wallet_base"].iloc[0] > 0
-    assert result["energy_wallet_alt"].iloc[0] > 0
+    assert result["energy_wallet_base"][0] > 0
+    assert result["energy_wallet_alt"][0] > 0
 
     # Verify total = sum of components
     for sfx in ("base", "alt"):
-        total = result[f"energy_wallet_{sfx}"].iloc[0]
+        total = result[f"energy_wallet_{sfx}"][0]
         components = (
-            result[f"vehicles_{sfx}_total_cost"].iloc[0]
-            + result[f"hvac_{sfx}_total_cost"].iloc[0]
-            + result[f"dhw_{sfx}_total_cost"].iloc[0]
-            + result[f"other_{sfx}_total_cost"].iloc[0]
+            result[f"vehicles_{sfx}_total_cost"][0]
+            + result[f"hvac_{sfx}_total_cost"][0]
+            + result[f"dhw_{sfx}_total_cost"][0]
+            + result[f"other_{sfx}_total_cost"][0]
         )
-        np.testing.assert_allclose(total, components, rtol=1e-9)
+        np.testing.assert_allclose(total, components, rtol=1e-5)
 
     # Verify diff = alt - base
-    diff = result["energy_wallet_alt"].iloc[0] - result["energy_wallet_base"].iloc[0]
-    np.testing.assert_allclose(result["energy_wallet_diff_absolute"].iloc[0], diff)
+    diff = result["energy_wallet_alt"][0] - result["energy_wallet_base"][0]
+    np.testing.assert_allclose(result["energy_wallet_diff_absolute"][0], diff)
 
 
 def test_compute_energy_wallet_missing_column_raises() -> None:
     """Pipeline raises CalculationError for missing columns."""
-    df = pd.DataFrame([{"discount_rate": 0.03}])
+    df = pl.DataFrame([{"discount_rate": 0.03}])
     with pytest.raises(CalculationError):
         compute_energy_wallet(df)

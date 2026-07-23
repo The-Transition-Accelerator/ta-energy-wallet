@@ -266,13 +266,8 @@ class TestMultiProvincePipeline:
     @pytest.fixture(autouse=True)
     def setup(self, tmp_path):
         import shutil
-        # Exclude prior converter output, as in TestPipelineIntegration.setup.
         self.lib_path = tmp_path / "canada_reference"
-        shutil.copytree(
-            DSPM_PATH,
-            self.lib_path,
-            ignore=shutil.ignore_patterns("energy_wallet_inputs"),
-        )
+        shutil.copytree(DSPM_PATH, self.lib_path)
 
     def test_multi_province_runs(self):
         from energy_wallet.dspm_converter.pipeline import run_pipeline

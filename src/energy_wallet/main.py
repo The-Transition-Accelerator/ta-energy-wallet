@@ -4,7 +4,7 @@ import argparse
 from pathlib import Path
 import sys
 
-import pandas as pd
+import polars as pl
 
 from energy_wallet.archetypes import (
     ArchetypeJoinError,
@@ -21,6 +21,14 @@ from energy_wallet.input_parameters import (
     InputParameterJoinError,
     InputParameterTableError,
     build_model_input_table,
+    load_model_input_tables,
+)
+from energy_wallet.partitioning import (
+    DEFAULT_PARTITION_ROWS,
+    StepOutputWriter,
+    compute_partition_count,
+    estimate_csv_output_gb,
+    resolve_output_format,
 )
 from energy_wallet.calculations import (
     CalculationError,
@@ -152,6 +160,26 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         action="store_true",
         help="Skip Step 5 utility bill perspective analysis",
     )
+    parser.add_argument(
+        "--output-format",
+        choices=["auto", "csv", "parquet"],
+        default="auto",
+        help=(
+            "Output file format (default: auto). auto = csv for single-partition "
+            "runs, parquet part-files for partitioned runs. Parquet is faster "
+            "and much smaller."
+        ),
+    )
+    parser.add_argument(
+        "--partition-rows",
+        type=int,
+        default=DEFAULT_PARTITION_ROWS,
+        help=(
+            "Maximum expanded-archetype rows processed per partition in Steps 3-5 "
+            f"(default: {DEFAULT_PARTITION_ROWS}). Bounds peak memory; results are "
+            "identical regardless of partitioning."
+        ),
+    )
 
     return parser.parse_args(argv)
 
@@ -251,16 +279,26 @@ def _list_available_input_sets(inputs_root: Path) -> list[str]:
     return sets
 
 
+def _write_output(df: pl.DataFrame, path: Path, fmt: str = "csv") -> Path:
+    """Write a DataFrame to disk in the requested format."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    if fmt == "parquet":
+        out = path.with_suffix(".parquet")
+        df.write_parquet(out)
+        return out
+    df.write_csv(path)
+    return path
+
+
 def run_step1(
     *,
     inputs_root: Path,
     archetypes_subdir: str,
-    output_path: Path,
     share_col: str,
     weight_col: str,
     tolerance: float,
     keep_provenance_shares: bool,
-) -> Path:
+) -> pl.DataFrame:
     archetypes_dir = inputs_root / archetypes_subdir
 
     tables_list, specs_list = load_all_archetype_tables(
@@ -272,7 +310,7 @@ def run_step1(
     tables = {spec.path.stem: table for table, spec in zip(tables_list, specs_list)}
     specs = {spec.path.stem: spec for spec in specs_list}
 
-    merged = merge_archetypes(
+    return merge_archetypes(
         tables,
         specs,
         weight_col_out=weight_col,
@@ -281,24 +319,17 @@ def run_step1(
         validate=True,
     )
 
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    merged.to_csv(output_path, index=False)
-    return output_path
-
 
 def run_step2(
     *,
-    baseline_archetypes_path: Path,
+    baseline: pl.DataFrame,
     inputs_root: Path,
     alternatives_subdir: str,
-    output_path: Path,
     adoption_share_col: str,
     weight_col: str,
     tolerance: float,
-) -> Path:
-    baseline = pd.read_csv(baseline_archetypes_path)
-
-    expanded = build_expanded_archetype_table(
+) -> pl.DataFrame:
+    return build_expanded_archetype_table(
         baseline,
         inputs_root=inputs_root,
         alternatives_subdir=alternatives_subdir,
@@ -308,68 +339,45 @@ def run_step2(
         tolerance=tolerance,
     )
 
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    expanded.to_csv(output_path, index=False)
-    return output_path
-
 
 def run_step3(
     *,
-    expanded_archetypes_path: Path,
+    expanded: pl.DataFrame,
     inputs_root: Path,
     input_parameters_subdir: str,
-    output_path: Path,
-) -> Path:
-    expanded = pd.read_csv(expanded_archetypes_path)
-
-    model_inputs = build_model_input_table(
+    tables_and_specs=None,
+) -> pl.DataFrame:
+    return build_model_input_table(
         expanded,
         inputs_root=inputs_root,
         input_parameters_subdir=input_parameters_subdir,
+        tables_and_specs=tables_and_specs,
     )
 
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    model_inputs.to_csv(output_path, index=False)
-    return output_path
+
+def run_step4(*, model_inputs: pl.DataFrame) -> pl.DataFrame:
+    return compute_energy_wallet(model_inputs)
 
 
-def run_step4(
-    *,
-    model_inputs_path: Path,
-    output_path: Path,
-) -> Path:
-    model_inputs = pd.read_csv(model_inputs_path)
-
-    step4_output = compute_energy_wallet(model_inputs)
-
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    step4_output.to_csv(output_path, index=False)
-    return output_path
-
-
-def run_step5(
-    *,
-    step4_output_path: Path,
-    output_path: Path,
-) -> Path:
-    step4_output = pd.read_csv(step4_output_path)
-
-    step5_output = compute_utility_bill_perspective(step4_output)
-
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    step5_output.to_csv(output_path, index=False)
-    return output_path
+def run_step5(*, step4_output: pl.DataFrame) -> pl.DataFrame:
+    return compute_utility_bill_perspective(step4_output)
 
 
 def main(argv: list[str] | None = None) -> int:
     args = _parse_args(argv)
     args = _resolve_paths(args)
 
+    if args.partition_rows < 1:
+        print(
+            f"Error: --partition-rows must be >= 1, got {args.partition_rows}",
+            file=sys.stderr,
+        )
+        return 1
+
     try:
-        step1_output = run_step1(
+        step1_df = run_step1(
             inputs_root=args.inputs_root,
             archetypes_subdir=args.archetypes_subdir,
-            output_path=args.output,
             share_col=args.share_col,
             weight_col=args.weight_col,
             tolerance=args.tolerance,
@@ -379,76 +387,141 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Step 1 failed: {exc}", file=sys.stderr)
         return 2
 
-    print(f"Step 1 complete. Merged archetype table written to: {step1_output}")
-
     if args.skip_step2:
+        out = _write_output(step1_df, args.output, resolve_output_format(args.output_format, 1))
+        print(f"Step 1 complete. Merged archetype table written to: {out}")
         print("Step 2 skipped (--skip-step2).")
         print("Step 3 cannot run without Step 2 output.")
         return 0
 
     try:
-        step2_output = run_step2(
-            baseline_archetypes_path=step1_output,
+        step2_df = run_step2(
+            baseline=step1_df,
             inputs_root=args.inputs_root,
             alternatives_subdir=args.alternatives_subdir,
-            output_path=args.step2_output,
             adoption_share_col=args.adoption_share_col,
             weight_col=args.weight_col,
             tolerance=args.tolerance,
         )
     except (AlternativeConfigTableError, AlternativeConfigJoinError) as exc:
+        # Still write Step 1's output so the failure can be inspected.
+        out = _write_output(step1_df, args.output, resolve_output_format(args.output_format, 1))
+        print(f"Step 1 complete. Merged archetype table written to: {out}")
         print(f"Step 2 failed: {exc}", file=sys.stderr)
         return 3
 
-    print(f"Step 2 complete. Expanded archetype table written to: {step2_output}")
+    # Output format resolves once the partition count is known, so Step 1's
+    # write is deferred until here (Step 2 failure path above still writes it).
+    n_parts = compute_partition_count(len(step2_df), args.partition_rows)
+    fmt = resolve_output_format(args.output_format, n_parts)
+
+    out = _write_output(step1_df, args.output, fmt)
+    print(f"Step 1 complete. Merged archetype table written to: {out}")
+    del step1_df
+    out = _write_output(step2_df, args.step2_output, fmt)
+    print(f"Step 2 complete. Expanded archetype table written to: {out}")
 
     if args.skip_step3:
         print("Step 3 skipped (--skip-step3).")
         return 0
 
+    if n_parts > 1:
+        print(
+            f"Expanded table: {len(step2_df):,} rows. Running Steps 3-5 in "
+            f"{n_parts} partitions (<={args.partition_rows:,} rows each) to bound memory."
+        )
+        if args.output_format == "auto":
+            print(
+                "Output format: parquet (auto-selected for partitioned runs; "
+                "pass --output-format csv to override)."
+            )
+        elif fmt == "csv":
+            projected_gb = estimate_csv_output_gb(step2_df)
+            if projected_gb > 10:
+                print(
+                    f"Note: at this scale CSV outputs will total roughly "
+                    f"{projected_gb:.0f} GB. Consider --output-format parquet."
+                )
+
     try:
-        step3_output = run_step3(
-            expanded_archetypes_path=step2_output,
-            inputs_root=args.inputs_root,
-            input_parameters_subdir=args.input_parameters_subdir,
-            output_path=args.step3_output,
+        tables_and_specs = load_model_input_tables(
+            args.inputs_root / args.input_parameters_subdir,
+            set(step2_df.columns),
         )
     except (InputParameterTableError, InputParameterJoinError) as exc:
         print(f"Step 3 failed: {exc}", file=sys.stderr)
         return 4
 
-    print(f"Step 3 complete. Final model input table written to: {step3_output}")
+    writers = {"step3": StepOutputWriter(args.step3_output, fmt, n_parts)}
+    if not args.skip_step4:
+        writers["step4"] = StepOutputWriter(args.step4_output, fmt, n_parts)
+        if not args.skip_step5:
+            writers["step5"] = StepOutputWriter(args.step5_output, fmt, n_parts)
+
+    def _abort(message: str, exit_code: int) -> int:
+        for w in writers.values():
+            w.abort()
+        print(message, file=sys.stderr)
+        return exit_code
+
+    for k in range(n_parts):
+        part = step2_df.slice(k * args.partition_rows, args.partition_rows)
+        ctx = f" [partition {k + 1}/{n_parts}]" if n_parts > 1 else ""
+
+        try:
+            step3_part = run_step3(
+                expanded=part,
+                inputs_root=args.inputs_root,
+                input_parameters_subdir=args.input_parameters_subdir,
+                tables_and_specs=tables_and_specs,
+            )
+        except (InputParameterTableError, InputParameterJoinError) as exc:
+            return _abort(f"Step 3 failed{ctx}: {exc}", 4)
+        writers["step3"].write_partition(step3_part, k)
+
+        if not args.skip_step4:
+            try:
+                step4_part = run_step4(model_inputs=step3_part)
+            except CalculationError as exc:
+                return _abort(f"Step 4 failed{ctx}: {exc}", 5)
+            del step3_part
+            writers["step4"].write_partition(step4_part, k)
+
+            if not args.skip_step5:
+                try:
+                    step5_part = run_step5(step4_output=step4_part)
+                except EnergyTypeAnalysisError as exc:
+                    return _abort(f"Step 5 failed{ctx}: {exc}", 6)
+                del step4_part
+                writers["step5"].write_partition(step5_part, k)
+                del step5_part
+            else:
+                del step4_part
+        else:
+            del step3_part
+
+        if n_parts > 1:
+            print(f"[partition {k + 1}/{n_parts}] complete")
+
+    out = writers["step3"].finalize()
+    print(f"Step 3 complete. Final model input table written to: {out}")
 
     if args.skip_step4:
         print("Step 4 skipped (--skip-step4).")
         print("Step 5 cannot run without Step 4 output.")
         return 0
 
-    try:
-        step4_output = run_step4(
-            model_inputs_path=step3_output,
-            output_path=args.step4_output,
-        )
-    except CalculationError as exc:
-        print(f"Step 4 failed: {exc}", file=sys.stderr)
-        return 5
-
-    print(f"Step 4 complete. Energy wallet calculations written to: {step4_output}")
+    out = writers["step4"].finalize()
+    print(f"Step 4 complete. Energy wallet calculations written to: {out}")
 
     if args.skip_step5:
         print("Step 5 skipped (--skip-step5).")
         return 0
 
-    try:
-        step5_output = run_step5(
-            step4_output_path=step4_output,
-            output_path=args.step5_output,
-        )
-    except EnergyTypeAnalysisError as exc:
-        print(f"Step 5 failed: {exc}", file=sys.stderr)
-        return 6
-
-    print(f"Step 5 complete. Utility bill perspective written to: {step5_output}")
+    out = writers["step5"].finalize()
+    print(f"Step 5 complete. Utility bill perspective written to: {out}")
+    if fmt == "parquet" and n_parts > 1:
+        print(f'Read results lazily with: pl.scan_parquet("{out}/*.parquet")')
     return 0
 
 

@@ -4,6 +4,7 @@ from pathlib import Path
 import sys
 
 import pandas as pd
+import polars as pl
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
@@ -17,7 +18,7 @@ from energy_wallet.input_parameters.join import attach_input_parameters  # noqa:
 from energy_wallet.input_parameters.spec import InputParameterTableSpec  # noqa: E402
 
 
-def _baseline_and_expanded_from_repo_inputs() -> tuple[pd.DataFrame, pd.DataFrame]:
+def _baseline_and_expanded_from_repo_inputs() -> tuple[pl.DataFrame, pl.DataFrame]:
     inputs_root = Path("inputs/test_input_set_1")
     tables_list, specs_list = load_all_archetype_tables(inputs_root / "archetypes")
     tables = {spec.path.stem: table for table, spec in zip(tables_list, specs_list)}
@@ -50,12 +51,12 @@ def test_infer_spec_treats_scenario_and_year_as_join_dimensions() -> None:
 
 
 def test_attach_input_parameters_raises_when_match_coverage_is_missing() -> None:
-    expanded = pd.DataFrame(
+    expanded = pl.DataFrame(
         [
             {"vehicle_type": "ICE", "population_weight": 1.0},
         ]
     )
-    table = pd.DataFrame(
+    table = pl.DataFrame(
         [
             {"vehicle_type": "EV", "vehicle_purchase_cost_base": 35000.0},
         ]
@@ -103,9 +104,9 @@ def test_build_model_input_table_end_to_end_with_repo_inputs() -> None:
     ]
     for col in required_subset:
         assert col in model_inputs.columns
-        assert not model_inputs[col].isna().any()
+        assert not model_inputs[col].is_null().any()
 
-    by_scenario_year = model_inputs.groupby(["scn_adoption", "year"], observed=True)[
-        "population_weight"
-    ].sum()
-    assert (by_scenario_year - 1.0).abs().max() <= 1e-9
+    by_scenario_year = model_inputs.group_by(["scn_adoption", "year"]).agg(
+        pl.col("population_weight").sum()
+    )
+    assert (by_scenario_year["population_weight"] - 1.0).abs().max() <= 1e-6

@@ -19,7 +19,7 @@ python -m energy_wallet.dspm_converter --config configs/dspm_ontario.yaml --dry-
 # Launch the dashboard
 python dashboard_v3/app.py
 
-# Run tests (takes ~9 minutes on Python 3.14; all 74 should pass)
+# Run tests (takes ~9 minutes on Python 3.14; all 160 should pass)
 pytest -q
 
 # Run a specific test suite
@@ -32,11 +32,11 @@ pip install -r requirements.txt
 
 **Python version:** 3.14 (venv at `.venv/`). Minimum supported: 3.10.
 
-**Core runtime dependencies:** `pandas`, `numpy-financial` (declared but not imported at runtime; hand-rolled PMT in `annualize.py`).
+**Core runtime dependencies:** `polars` (pipeline Steps 1–5), `pandas` (DSPM converter + dashboard), `numpy` (Step 4/5 calculations; hand-rolled PMT in `annualize.py`).
 
 **Dashboard dependencies:** `dash`, `dash-ag-grid`, `plotly`, `pyyaml`.
 
-**Dev/test dependencies (requirements-dev.txt):** `pytest`, `openpyxl`, `numpy`, `seaborn`, `pyarrow`.
+**Dev/test dependencies (requirements-dev.txt):** `pytest`, `openpyxl`, `seaborn`, `pyarrow`, `streamlit`.
 
 ## Pipeline Architecture (5 Steps)
 
@@ -57,6 +57,8 @@ Each step reads the previous step's CSV output. Steps are chained in `main.py`.
 ```
 src/energy_wallet/
   main.py                          # CLI entrypoint, run_step1..5 functions
+  partitioning.py                  # Partitioned Steps 3-5 execution: partition math + StepOutputWriter
+  dtypes.py                        # Shared Polars dtype schemas
   archetypes/                      # Step 1
     spec.py                        #   ArchetypeTableSpec dataclass
     io.py                          #   discover, infer_spec, load CSV files
@@ -217,7 +219,7 @@ Re-aggregates Step 4 intermediates into 7 energy bill categories: electricity, n
 
 ## Tests
 
-**74 tests total** across 8 test files in `tests/`:
+**160 tests total** across 15 test files in `tests/`:
 
 | File | Tests | What It Covers |
 |------|-------|---------------|
@@ -226,9 +228,16 @@ Re-aggregates Step 4 intermediates into 7 energy bill categories: electricity, n
 | `test_input_parameters.py` | 3 | Step 3: loading, multi-lookup, end-to-end parameter attachment |
 | `test_calculations.py` | 13 | Step 4: annualize, vehicle ICE/EV/none, HVAC, DHW, other, full pipeline |
 | `test_energy_type_analysis.py` | 5 | Step 5: reconciliation, column existence, fuel-type checks |
-| `test_dspm_transforms.py` | 30 | Converter unit tests: unit conversions, aggregation, mapping, efficiency, fuel proportions |
-| `test_dspm_pipeline.py` | 6 | Converter integration tests: end-to-end pipeline, join-key validation, atomic write |
-| `test_dspm_cli.py` | 5 | Converter CLI: arg parsing, dry-run, config error handling |
+| `test_partitioning.py` | 27 | Partition math, format resolution, StepOutputWriter (CSV append, Parquet parts, atomicity), parameter-table preloading |
+| `test_main_partitioned.py` | 5 | CLI: auto format resolution, partitioned/unpartitioned equivalence, failure atomicity, skip-flag shapes |
+| `test_dspm_transforms.py` | 31 | Converter unit tests: unit conversions, aggregation, mapping, efficiency, fuel proportions |
+| `test_dspm_pipeline.py` | 14 | Converter integration tests: end-to-end pipeline, join-key validation, atomic write |
+| `test_dspm_cli.py` | 9 | Converter CLI: arg parsing, dry-run, config error handling |
+| `test_dashboard_v3/test_constants.py` | 5 | Dashboard: color/dimension constants |
+| `test_dashboard_v3/test_input_browser.py` | 5 | Dashboard: meta.yaml input browser |
+| `test_dashboard_v3/test_integration.py` | 5 | Dashboard: page integration |
+| `test_dashboard_v3/test_loader.py` | 8 | Dashboard: input/output CSV discovery + loading |
+| `test_dashboard_v3/test_summary.py` | 18 | Dashboard: weighted aggregation helpers |
 
 Tests use `test_input_set_1` data by default. Tests are slow (~9 min) due to Python 3.14 compilation overhead.
 
@@ -243,6 +252,8 @@ Key flags for `python -m energy_wallet.main`:
 - `--keep-provenance-shares`: Retain per-table share columns (dropped by default)
 - `--tolerance FLOAT`: Validation tolerance for share sums (default 0.001)
 - `--step{2,3,4,5}-output PATH`: Custom output paths
+- `--output-format {auto,csv,parquet}`: Output format (default `auto` = CSV for single-partition runs, Parquet part-file directories for partitioned runs)
+- `--partition-rows N`: Max expanded rows per Steps 3–5 partition (default 400000). Bounds peak memory; results are identical regardless of partitioning
 
 Exit codes: 0=success, 1=arg error, 2=Step1, 3=Step2, 4=Step3, 5=Step4, 6=Step5.
 
@@ -261,6 +272,8 @@ Exit codes: 0=success, 1=arg error, 2=Step1, 3=Step2, 4=Step3, 5=Step4, 6=Step5.
 6. **Required parameters registry** (`required.py`): 139 parameters generated programmatically with `{N}` (slot) and `{s}` (base/alt) substitutions. This is the contract between Step 3 and Steps 4/5.
 
 7. **Reconciliation**: Step 5 validates that utility bill category sums match `energy_wallet_{s}` within floating-point tolerance.
+
+8. **Partitioned execution** (`partitioning.py`): When Step 2 output exceeds `--partition-rows` (default 400k), Steps 3–5 run per row-range partition with incremental output writers, bounding peak memory at ~2–3 GB regardless of input scale. Parameter tables are loaded once and reused across partitions. Outputs build at `.partial` paths and rename atomically on success. Steps 3–5 are row-local, so partitioned results are byte-identical to unpartitioned runs.
 
 ## Authoritative Reference
 

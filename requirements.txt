@@ -1,5 +1,6 @@
+polars
 pandas
-numpy-financial
+numpy
 plotly
 dash
 dash-ag-grid

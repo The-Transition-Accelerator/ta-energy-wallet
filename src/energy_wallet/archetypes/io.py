@@ -1,7 +1,9 @@
 from __future__ import annotations
 from pathlib import Path
 from typing import List, Tuple, Optional, Iterable
-import pandas as pd
+import polars as pl
+
+from energy_wallet.dtypes import optimize_dtypes
 
 from .errors import ArchetypeTableError
 from .spec import ArchetypeTableSpec
@@ -15,32 +17,9 @@ def discover_archetype_files(
     include: Optional[Iterable[str]] = None,
     exclude: Optional[Iterable[str]] = None,
 ) -> List[Path]:
-    """
-    Discover archetype table files.
-
-    New architecture: files are named by the archetype variable they define,
-    so we do NOT require a 'w_' prefix.
-
-    Parameters
-    ----------
-    inputs_dir : Path
-        Directory containing archetype CSV files.
-    suffix : str
-        File extension to match (default '.csv').
-    include : Iterable[str] | None
-        Optional list of filename stems or filenames to include.
-        Examples: ['dwelling_type', 'vehicle_type'] or ['dwelling_type.csv']
-    exclude : Iterable[str] | None
-        Optional list of filename stems or filenames to exclude.
-
-    Returns
-    -------
-    List[Path]
-    """
     if not inputs_dir.exists():
         raise ArchetypeTableError(f"Inputs directory not found: {inputs_dir}")
 
-    # Normalize include/exclude to sets of both "stem" and "name"
     include_set = set()
     if include:
         for x in include:
@@ -63,19 +42,15 @@ def discover_archetype_files(
     for p in inputs_dir.iterdir():
         if not (p.is_file() and p.suffix == suffix):
             continue
-
         if include_set:
             if (p.name not in include_set) and (p.stem not in include_set):
                 continue
-
         if exclude_set:
             if (p.name in exclude_set) or (p.stem in exclude_set):
                 continue
-
         files.append(p)
 
     files = sorted(files)
-
     if not files:
         raise ArchetypeTableError(f"No archetype CSV files found in {inputs_dir} (suffix='{suffix}')")
 
@@ -120,14 +95,13 @@ def load_archetype_table(
     path: Path,
     share_col: str = "population_share",
     tolerance: float = 1e-3,
-) -> Tuple[pd.DataFrame, ArchetypeTableSpec]:
-    df = pd.read_csv(path)
+) -> Tuple[pl.DataFrame, ArchetypeTableSpec]:
+    df = optimize_dtypes(pl.read_csv(path))
 
-    cols = list(df.columns)
+    cols = df.columns
     spec = infer_spec_from_columns(path, cols, share_col=share_col)
 
-    # Filter zero-share rows early (optimization requirement)
-    df = df[df[spec.share_col] != 0].copy()
+    df = df.filter(pl.col(spec.share_col) != 0)
 
     validate_table(df, spec, tolerance=tolerance)
     return df, spec
@@ -141,10 +115,10 @@ def load_all_archetype_tables(
     *,
     include: Optional[Iterable[str]] = None,
     exclude: Optional[Iterable[str]] = None,
-) -> Tuple[List[pd.DataFrame], List[ArchetypeTableSpec]]:
+) -> Tuple[List[pl.DataFrame], List[ArchetypeTableSpec]]:
     files = discover_archetype_files(inputs_dir, include=include, exclude=exclude)
 
-    tables: List[pd.DataFrame] = []
+    tables: List[pl.DataFrame] = []
     specs: List[ArchetypeTableSpec] = []
 
     for p in files:

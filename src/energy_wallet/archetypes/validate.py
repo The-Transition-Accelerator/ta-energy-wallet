@@ -1,5 +1,5 @@
 from __future__ import annotations
-import pandas as pd
+import polars as pl
 from .errors import ArchetypeTableError
 from .spec import ArchetypeTableSpec
 from energy_wallet.validation.common import (
@@ -9,8 +9,7 @@ from energy_wallet.validation.common import (
 )
 
 
-def validate_table(df: pd.DataFrame, spec: ArchetypeTableSpec, tolerance: float = 1e-3) -> None:
-    # shares exist + numeric
+def validate_table(df: pl.DataFrame, spec: ArchetypeTableSpec, tolerance: float = 1e-3) -> None:
     if spec.share_col not in df.columns:
         raise ArchetypeTableError(f"{spec.path.name}: missing share column '{spec.share_col}'")
 
@@ -22,7 +21,7 @@ def validate_table(df: pd.DataFrame, spec: ArchetypeTableSpec, tolerance: float 
     )
 
     if ((shares < 0) | (shares > 1)).any():
-        bad = df.loc[(shares < 0) | (shares > 1), [spec.share_col]].head(5)
+        bad = df.filter((pl.col(spec.share_col) < 0) | (pl.col(spec.share_col) > 1)).head(5)
         require_series_between(
             shares,
             lower=0.0,
@@ -34,7 +33,6 @@ def validate_table(df: pd.DataFrame, spec: ArchetypeTableSpec, tolerance: float 
             ),
         )
 
-    # sum-to-1 within conditioning (+ year if present)
     group_cols = list(spec.conditioning_cols)
     if spec.year_col:
         group_cols.append(spec.year_col)

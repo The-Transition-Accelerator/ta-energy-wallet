@@ -6,7 +6,7 @@ from .io import (
     load_input_parameter_table,
 )
 from .join import attach_input_parameters
-from .pipeline import build_model_input_table
+from .pipeline import build_model_input_table, load_model_input_tables
 
 __all__ = [
     "InputParameterTableError",
@@ -17,4 +17,5 @@ __all__ = [
     "load_all_input_parameter_tables",
     "attach_input_parameters",
     "build_model_input_table",
+    "load_model_input_tables",
 ]

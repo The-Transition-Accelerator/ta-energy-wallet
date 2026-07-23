@@ -3,14 +3,14 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Optional
 
-import pandas as pd
+import polars as pl
 
 from .io import load_all_alternative_configuration_tables
 from .join import merge_alternative_configurations
 
 
 def build_expanded_archetype_table(
-    baseline_archetypes: pd.DataFrame,
+    baseline_archetypes: pl.DataFrame,
     *,
     inputs_root: Path,
     alternatives_subdir: str = "alternative_configurations",
@@ -19,12 +19,7 @@ def build_expanded_archetype_table(
     expanded_weight_col: str = "population_weight",
     tolerance: float = 1e-3,
     scenario_cols_by_file: Optional[dict[str, list[str]]] = None,
-) -> pd.DataFrame:
-    """Orchestrate Step 2 table loading and expansion.
-
-    This function intentionally provides the outer API now; the inner merge
-    implementation is pending in `merge_alternative_configurations`.
-    """
+) -> pl.DataFrame:
     inputs_dir = inputs_root / alternatives_subdir
 
     tables_list, specs_list = load_all_alternative_configuration_tables(
